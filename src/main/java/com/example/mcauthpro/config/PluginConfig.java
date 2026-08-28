@@ -106,4 +106,40 @@ public class PluginConfig {
     public boolean isVerifyEnabled() {
         return config.getBoolean("verification.enabled", true);
     }
+
+    public String getChamberWorld() {
+        return config.getString("verification-chamber.world", "world");
+    }
+
+    public double getChamberX() {
+        return config.getDouble("verification-chamber.x", 0);
+    }
+
+    public double getChamberY() {
+        return config.getDouble("verification-chamber.y", 100);
+    }
+
+    public double getChamberZ() {
+        return config.getDouble("verification-chamber.z", 0);
+    }
+
+    public boolean isForceSpectator() {
+        return config.getBoolean("verification-chamber.force-spectator", true);
+    }
+
+    public int getMaxViewDistance() {
+        return config.getInt("verification-chamber.max-view-distance", 2);
+    }
+
+    public boolean isChamberEnabled() {
+        return config.getBoolean("verification-chamber.enabled", true);
+    }
+
+    public int getMaxConcurrentUnauth() {
+        return config.getInt("anti-dos.max-concurrent-unauth", 5);
+    }
+
+    public int getVerificationTimeout() {
+        return config.getInt("anti-dos.verification-timeout", 300);
+    }
 }

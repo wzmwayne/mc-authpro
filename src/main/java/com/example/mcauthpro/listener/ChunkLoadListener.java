@@ -1,27 +1,23 @@
 package com.example.mcauthpro.listener;
 
 import com.example.mcauthpro.auth.AuthService;
+import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
 
-public class PlayerMoveListener implements Listener {
+public class ChunkLoadListener implements Listener {
     private final AuthService authService;
 
-    public PlayerMoveListener(AuthService authService) {
+    public ChunkLoadListener(AuthService authService) {
         this.authService = authService;
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerMove(PlayerMoveEvent event) {
+    public void onPlayerChunkLoad(PlayerChunkLoadEvent event) {
         Player player = event.getPlayer();
         if (authService.isFullyAuthenticated(player)) return;
-        if (event.getFrom().getX() != event.getTo().getX() ||
-            event.getFrom().getY() != event.getTo().getY() ||
-            event.getFrom().getZ() != event.getTo().getZ()) {
-            event.setCancelled(true);
-        }
+        player.setViewDistance(2);
     }
 }

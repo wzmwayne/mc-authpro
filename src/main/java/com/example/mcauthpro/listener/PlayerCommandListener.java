@@ -12,7 +12,7 @@ import java.util.List;
 public class PlayerCommandListener implements Listener {
     private final AuthService authService;
     private static final List<String> ALLOWED_COMMANDS = Arrays.asList(
-        "login", "register", "verify", "logout"
+        "/login", "/register", "/verify"
     );
 
     public PlayerCommandListener(AuthService authService) {
@@ -22,12 +22,11 @@ public class PlayerCommandListener implements Listener {
     @EventHandler
     public void onPlayerCommand(PlayerCommandPreprocessEvent event) {
         Player player = event.getPlayer();
-        if (!authService.isFullyAuthenticated(player)) {
-            String command = event.getMessage().toLowerCase();
-            String commandName = command.split(" ")[0].substring(1);
-            if (!ALLOWED_COMMANDS.contains(commandName)) {
-                event.setCancelled(true);
-            }
+        if (authService.isFullyAuthenticated(player)) return;
+        String message = event.getMessage().toLowerCase();
+        for (String cmd : ALLOWED_COMMANDS) {
+            if (message.startsWith(cmd)) return;
         }
+        event.setCancelled(true);
     }
 }

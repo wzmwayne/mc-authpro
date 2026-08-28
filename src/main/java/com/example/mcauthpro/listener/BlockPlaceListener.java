@@ -5,23 +5,19 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 
-public class PlayerMoveListener implements Listener {
+public class BlockPlaceListener implements Listener {
     private final AuthService authService;
 
-    public PlayerMoveListener(AuthService authService) {
+    public BlockPlaceListener(AuthService authService) {
         this.authService = authService;
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerMove(PlayerMoveEvent event) {
+    public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
         if (authService.isFullyAuthenticated(player)) return;
-        if (event.getFrom().getX() != event.getTo().getX() ||
-            event.getFrom().getY() != event.getTo().getY() ||
-            event.getFrom().getZ() != event.getTo().getZ()) {
-            event.setCancelled(true);
-        }
+        event.setCancelled(true);
     }
 }

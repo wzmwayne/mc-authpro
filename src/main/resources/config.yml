@@ -8,7 +8,7 @@ verification:
   # Cloudflare Turnstile Siteverify API URL
   siteverify-url: "https://challenges.cloudflare.com/turnstile/v0/siteverify"
   # Cloudflare Turnstile 密钥
-  secret-key: "YOUR_SECRET_KEY_HERE"
+  secret-key: "1x0000000000000000000000000000000AA"
   # Turnstile action 参数（用于统计和区分）
   action: "mc-login"
   # 令牌有效期（秒）
@@ -53,3 +53,16 @@ whitelist:
 blacklist:
   enabled: false
   kick-message: "你已被加入黑名单"
+
+verification-chamber:
+  enabled: true
+  world: "world"
+  x: 0
+  y: 100
+  z: 0
+  force-spectator: true
+  max-view-distance: 2
+
+anti-dos:
+  max-concurrent-unauth: 5
+  verification-timeout: 300

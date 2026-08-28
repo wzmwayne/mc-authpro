@@ -11,6 +11,13 @@ import com.example.mcauthpro.listener.PlayerMoveListener;
 import com.example.mcauthpro.listener.PlayerChatListener;
 import com.example.mcauthpro.listener.PlayerCommandListener;
 import com.example.mcauthpro.listener.PlayerQuitListener;
+import com.example.mcauthpro.listener.BlockBreakListener;
+import com.example.mcauthpro.listener.BlockPlaceListener;
+import com.example.mcauthpro.listener.PlayerInteractListener;
+import com.example.mcauthpro.listener.PlayerInteractEntityListener;
+import com.example.mcauthpro.listener.InventoryClickListener;
+import com.example.mcauthpro.listener.ChunkLoadListener;
+import com.example.mcauthpro.listener.GameModeChangeListener;
 import com.example.mcauthpro.command.LoginCommand;
 import com.example.mcauthpro.command.RegisterCommand;
 import com.example.mcauthpro.command.VerifyCommand;
@@ -59,6 +66,13 @@ public class McAuthPro extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerChatListener(authService), this);
         getServer().getPluginManager().registerEvents(new PlayerCommandListener(authService), this);
         getServer().getPluginManager().registerEvents(new PlayerQuitListener(sessionManager), this);
+        getServer().getPluginManager().registerEvents(new BlockBreakListener(authService), this);
+        getServer().getPluginManager().registerEvents(new BlockPlaceListener(authService), this);
+        getServer().getPluginManager().registerEvents(new PlayerInteractListener(authService), this);
+        getServer().getPluginManager().registerEvents(new PlayerInteractEntityListener(authService), this);
+        getServer().getPluginManager().registerEvents(new InventoryClickListener(authService), this);
+        getServer().getPluginManager().registerEvents(new ChunkLoadListener(authService), this);
+        getServer().getPluginManager().registerEvents(new GameModeChangeListener(authService), this);
     }
 
     public static McAuthPro getInstance() {
