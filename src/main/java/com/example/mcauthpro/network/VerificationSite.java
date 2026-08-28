@@ -12,10 +12,10 @@ public class VerificationSite {
     }
 
     public String getVerificationUrl(UUID sessionId) {
-        return config.getStaticSiteBaseUrl() + "/verify?session=" + sessionId.toString();
+        return config.getStaticSiteBaseUrl() + "?session=" + sessionId.toString();
     }
 
     public String getVerificationUrl(String sessionId) {
-        return config.getStaticSiteBaseUrl() + "/verify?session=" + sessionId;
+        return config.getStaticSiteBaseUrl() + "?session=" + sessionId;
     }
 }

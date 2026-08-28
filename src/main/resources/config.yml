@@ -4,7 +4,7 @@ verification:
   # 是否启用验证（完全禁用验证模块）
   enabled: true
   # 静态页面 URL（前端 Turnstile 页面地址）
-  static-site-base-url: "https://auth.example.com"
+  static-site-base-url: "https://wzml.cc.cd/mc-authpro"
   # Cloudflare Turnstile Siteverify API URL
   siteverify-url: "https://challenges.cloudflare.com/turnstile/v0/siteverify"
   # Cloudflare Turnstile 密钥
