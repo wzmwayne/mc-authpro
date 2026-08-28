@@ -18,6 +18,7 @@ public class GameModeChangeListener implements Listener {
     public void onGameModeChange(PlayerGameModeChangeEvent event) {
         Player player = event.getPlayer();
         if (authService.isFullyAuthenticated(player)) return;
+        if (event.getNewGameMode() == org.bukkit.GameMode.SPECTATOR) return;
         event.setCancelled(true);
     }
 }

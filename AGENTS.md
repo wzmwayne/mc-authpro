@@ -29,6 +29,15 @@
    - 优先级：BungeeGuard → CF-Connecting-IP → X-Forwarded-For → socket IP  
    - 记录所有出现的 IP 用于审计
 
+5. **安全防护**  
+   - 拦截方块破坏/放置  
+   - 拦截玩家交互/实体交互  
+   - 拦截背包操作  
+   - 阻止 F3+F4 游戏模式切换  
+   - OP 权限检查（无视 OP 状态）  
+   - 防 DoS：监控区块加载，强制 view distance=2  
+   - 验证室系统：未验证玩家传送到隔离区域
+
 ## 技术栈
 
 | 层级 | 技术 | 版本/说明 |
@@ -48,28 +57,43 @@
 ```yaml
 verification:
   enabled: true
-  static-site-base-url: "https://auth.example.com"
+  static-site-base-url: "https://wzml.cc.cd/mc-authpro"
   siteverify-url: "https://challenges.cloudflare.com/turnstile/v0/siteverify"
-  secret-key: "YOUR_SECRET_KEY_HERE"
+  secret-key: "1x0000000000000000000000000000000AA"  # 测试用
   action: "mc-login"
   token-ttl-seconds: 300
   timeout-seconds: 300
   expected-hostname: ""
   http-timeout-seconds: 10
+
 session:
   timeout-seconds: 180
   remember-ip-minutes: 30
-```
 
-### messages.yml
-```yaml
-verify:
-  success: "&a验证成功！欢迎回来，%player%！"
-  invalid: "&c令牌无效或已过期，请重新验证。"
-  expired: "&c令牌已过期，请重新执行 /login。"
-  no-session: "&c未找到待验证会话，请先执行 /login。"
-  duplicate: "&c该令牌已被使用，请重新验证。"
-  network-error: "&c验证服务暂时不可用，请稍后重试。"
+real-ip:
+  trust-proxy: true
+  cf-header: "CF-Connecting-IP"
+  forwarded-header: "X-Forwarded-For"
+  bungee-guard: true
+  max-ips-to-record: 5
+
+security:
+  max-login-attempts: 5
+  lockout-seconds: 60
+  allow-multiple-logins-per-ip: true
+
+verification-chamber:
+  enabled: true
+  world: "world"
+  x: 0
+  y: 100
+  z: 0
+  force-spectator: true
+  max-view-distance: 2
+
+anti-dos:
+  max-concurrent-unauth: 5
+  verification-timeout: 300
 ```
 
 ## 目录结构
@@ -85,11 +109,18 @@ mc-authpro/
 │   │   ├── LogoutCommand.java
 │   │   └── AuthAdminCommand.java
 │   ├── listener/                     # 监听器
-│   │   ├── PlayerJoinListener.java
+│   │   ├── PlayerJoinListener.java   # 验证室传送
 │   │   ├── PlayerMoveListener.java
 │   │   ├── PlayerChatListener.java
 │   │   ├── PlayerCommandListener.java
 │   │   └── PlayerQuitListener.java
+│   │   ├── BlockBreakListener.java   # ★ 拦截方块破坏
+│   │   ├── BlockPlaceListener.java   # ★ 拦截方块放置
+│   │   ├── PlayerInteractListener.java # ★ 拦截交互
+│   │   ├── PlayerInteractEntityListener.java # ★ 拦截实体交互
+│   │   ├── InventoryClickListener.java # ★ 拦截背包
+│   │   ├── ChunkLoadListener.java    # ★ 监控区块加载
+│   │   └── GameModeChangeListener.java # ★ 阻止F3+F4
 │   ├── auth/                         # 认证相关
 │   │   ├── AuthService.java
 │   │   ├── PasswordHasher.java
@@ -99,7 +130,7 @@ mc-authpro/
 │   ├── network/                      # 网络相关
 │   │   ├── RealIpResolver.java
 │   │   ├── VerificationSite.java
-│   │   └── TurnstileValidator.java   # ★ 新增：Siteverify 调用
+│   │   └── TurnstileValidator.java   # Siteverify 调用
 │   ├── gui/                          # GUI 验证页面
 │   │   ├── VerificationBook.java
 │   │   └── BossBarHandler.java
@@ -141,6 +172,7 @@ mc-authpro/
 - **服务器路径**：`/media/wayne/Elements/gamestamp/mc_server/`
 - **Paper 版本**：26.2-119（Minecraft 26.2）
 - **插件加载**：已验证，McAuthPro v0.1.0 已成功加载
+- **GitHub Pages**：https://wzml.cc.cd/mc-authpro
 
 ## 国内镜像源配置
 
@@ -168,7 +200,7 @@ mc-authpro/
 | 版本 | 日期 | 变更 |
 |------|------|------|
 | 0.1.0 | 2026-08-28 | 初版，验证模块和持久化模块实现 |
-| 0.1.1 | 待定 | 添加 Turnstile 完整测试 |
+| 0.1.1 | 2026-08-28 | 添加安全防护和验证室系统 |
 | 0.2.0 | 待定 | 添加黑白名单功能 |
 
 ## 联系人

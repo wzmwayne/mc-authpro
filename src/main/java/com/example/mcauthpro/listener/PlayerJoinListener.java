@@ -37,10 +37,14 @@ public class PlayerJoinListener implements Listener {
             player.sendMessage(ChatColor.YELLOW + "请先登录：/login <密码>");
         }
 
-        teleportToVerificationChamber(player);
+        plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+            teleportToVerificationChamber(player);
+        }, 5L);
     }
 
     private void teleportToVerificationChamber(Player player) {
+        if (player == null || !player.isOnline()) return;
+
         String worldName = plugin.getPluginConfig().getChamberWorld();
         World world = plugin.getServer().getWorld(worldName);
         if (world == null) {
