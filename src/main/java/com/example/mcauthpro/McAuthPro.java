@@ -1,0 +1,83 @@
+package com.example.mcauthpro;
+
+import com.example.mcauthpro.config.PluginConfig;
+import com.example.mcauthpro.auth.AuthService;
+import com.example.mcauthpro.auth.SessionManager;
+import com.example.mcauthpro.auth.StorageService;
+import com.example.mcauthpro.network.RealIpResolver;
+import com.example.mcauthpro.network.TurnstileValidator;
+import com.example.mcauthpro.listener.PlayerJoinListener;
+import com.example.mcauthpro.listener.PlayerMoveListener;
+import com.example.mcauthpro.listener.PlayerChatListener;
+import com.example.mcauthpro.listener.PlayerCommandListener;
+import com.example.mcauthpro.listener.PlayerQuitListener;
+import com.example.mcauthpro.command.LoginCommand;
+import com.example.mcauthpro.command.RegisterCommand;
+import com.example.mcauthpro.command.VerifyCommand;
+import org.bukkit.plugin.java.JavaPlugin;
+
+public class McAuthPro extends JavaPlugin {
+    private static McAuthPro instance;
+    private PluginConfig config;
+    private AuthService authService;
+    private StorageService storageService;
+    private SessionManager sessionManager;
+    private RealIpResolver realIpResolver;
+    private TurnstileValidator turnstileValidator;
+
+    @Override
+    public void onEnable() {
+        instance = this;
+        this.config = new PluginConfig(this);
+        this.storageService = new StorageService(this);
+        this.realIpResolver = new RealIpResolver(config);
+        this.sessionManager = new SessionManager();
+        this.turnstileValidator = new TurnstileValidator(config);
+        this.authService = new AuthService(this, storageService, sessionManager, turnstileValidator, realIpResolver, config);
+        registerCommands();
+        registerListeners();
+        getLogger().info("MC AuthPro 插件已启用");
+    }
+
+    @Override
+    public void onDisable() {
+        if (sessionManager != null) {
+            sessionManager.shutdown();
+        }
+        getLogger().info("MC AuthPro 插件已停用");
+    }
+
+    private void registerCommands() {
+        getCommand("login").setExecutor(new LoginCommand(authService));
+        getCommand("register").setExecutor(new RegisterCommand(authService));
+        getCommand("verify").setExecutor(new VerifyCommand(authService));
+    }
+
+    private void registerListeners() {
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this, authService), this);
+        getServer().getPluginManager().registerEvents(new PlayerMoveListener(authService), this);
+        getServer().getPluginManager().registerEvents(new PlayerChatListener(authService), this);
+        getServer().getPluginManager().registerEvents(new PlayerCommandListener(authService), this);
+        getServer().getPluginManager().registerEvents(new PlayerQuitListener(sessionManager), this);
+    }
+
+    public static McAuthPro getInstance() {
+        return instance;
+    }
+
+    public PluginConfig getPluginConfig() {
+        return config;
+    }
+
+    public AuthService getAuthService() {
+        return authService;
+    }
+
+    public SessionManager getSessionManager() {
+        return sessionManager;
+    }
+
+    public RealIpResolver getRealIpResolver() {
+        return realIpResolver;
+    }
+}

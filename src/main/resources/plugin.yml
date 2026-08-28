@@ -1,0 +1,66 @@
+name: McAuthPro
+main: com.example.mcauthpro.McAuthPro
+version: ${version}
+api-version: 1.21
+description: Paper 1.21.x 安全插件，提供账号登录、人机验证、访问控制和黑白名单接管
+authors: [Wayne]
+website: https://github.com/wayne/mc-authpro
+
+commands:
+  login:
+    description: 登录
+    usage: /login <密码>
+    permission: mcauthpro.login
+  register:
+    description: 注册
+    usage: /register <密码> <密码>
+    permission: mcauthpro.register
+  verify:
+    description: 验证令牌
+    usage: /verify <令牌>
+    permission: mcauthpro.verify
+  logout:
+    description: 注销
+    usage: /logout
+    permission: mcauthpro.logout
+  changepassword:
+    description: 修改密码
+    usage: /changepassword <旧密码> <新密码>
+    permission: mcauthpro.changepassword
+  authadmin:
+    description: 管理员命令
+    usage: /authadmin <子命令>
+    permission: mcauthpro.admin
+
+permissions:
+  mcauthpro.login:
+    description: 执行登录
+    default: true
+  mcauthpro.register:
+    description: 执行注册
+    default: true
+  mcauthpro.verify:
+    description: 执行验证
+    default: true
+  mcauthpro.logout:
+    description: 执行注销
+    default: true
+  mcauthpro.changepassword:
+    description: 修改密码
+    default: true
+  mcauthpro.admin:
+    description: 管理员命令
+    default: op
+    children:
+      mcauthpro.whitelist: true
+      mcauthpro.blacklist: true
+      mcauthpro.ban-ip: true
+  mcauthpro.whitelist:
+    description: 白名单管理
+    default: op
+  mcauthpro.blacklist:
+    description: 黑名单管理
+    default: op
+  mcauthpro.ban-ip:
+    description: IP 封禁
+    default: op

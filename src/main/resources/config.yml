@@ -1,0 +1,55 @@
+# MC AuthPro 配置文件
+
+verification:
+  # 是否启用验证（完全禁用验证模块）
+  enabled: true
+  # 静态页面 URL（前端 Turnstile 页面地址）
+  static-site-base-url: "https://auth.example.com"
+  # Cloudflare Turnstile Siteverify API URL
+  siteverify-url: "https://challenges.cloudflare.com/turnstile/v0/siteverify"
+  # Cloudflare Turnstile 密钥
+  secret-key: "YOUR_SECRET_KEY_HERE"
+  # Turnstile action 参数（用于统计和区分）
+  action: "mc-login"
+  # 令牌有效期（秒）
+  token-ttl-seconds: 300
+  # 整个登录流程超时（秒）
+  timeout-seconds: 300
+  # 期望验证的 hostname（留空则不校验）
+  expected-hostname: ""
+  # 请求超时（秒）
+  http-timeout-seconds: 10
+
+session:
+  # 会话超时（秒）
+  timeout-seconds: 180
+  # 记住 IP 的时间（分钟）
+  remember-ip-minutes: 30
+
+real-ip:
+  # 是否信任代理
+  trust-proxy: true
+  # CF 头
+  cf-header: "CF-Connecting-IP"
+  # X-Forwarded-For 头
+  forwarded-header: "X-Forwarded-For"
+  # 是否启用 BungeeGuard
+  bungee-guard: true
+  # 最多记录多少个 IP
+  max-ips-to-record: 5
+
+security:
+  # 最大登录尝试次数
+  max-login-attempts: 5
+  # 锁定时间（秒）
+  lockout-seconds: 60
+  # 是否允许同 IP 多个账号同时登录
+  allow-multiple-logins-per-ip: true
+
+whitelist:
+  enabled: false
+  kick-message: "你不在白名单中"
+
+blacklist:
+  enabled: false
+  kick-message: "你已被加入黑名单"
