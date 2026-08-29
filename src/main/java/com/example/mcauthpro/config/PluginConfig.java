@@ -105,6 +105,10 @@ public class PluginConfig {
         return config.getInt("verification.countdown-seconds", 30);
     }
 
+    public String getFrontendToken() {
+        return config.getString("verification.frontend-token", "");
+    }
+
     // ==================== session ====================
     public int getSessionTimeoutSeconds() {
         return config.getInt("session.timeout-seconds", 180);

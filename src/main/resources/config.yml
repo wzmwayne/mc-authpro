@@ -30,6 +30,8 @@ verification:
   http-timeout-seconds: 10
   # 人机验证倒计时（秒），超时未验证则踢出
   countdown-seconds: 30
+  # 前端共享令牌（与网页传入的 token 参数对比，空则不校验）
+  frontend-token: ""
 
 # -----------------------------
 # 会话配置

@@ -64,6 +64,13 @@ public class AuthService {
         String remoteIp = realIpResolver.getRealIp(player);
         TurnstileValidator.ValidateResult result = turnstileValidator.validate(token, remoteIp);
         if (result.isSuccess()) {
+            String cdata = result.getCdata();
+            String expectedToken = config.getFrontendToken();
+            if (expectedToken != null && !expectedToken.isEmpty()) {
+                if (cdata == null || !cdata.contains("|" + expectedToken)) {
+                    return false;
+                }
+            }
             sessionManager.markTurnstileVerified(player);
             return true;
         }

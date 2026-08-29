@@ -38,7 +38,7 @@ public class TurnstileValidator {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             return parseResponse(response.body());
         } catch (Exception e) {
-            return new ValidateResult(false, "network-error", "验证请求异常: " + e.getMessage());
+            return new ValidateResult(false, "network-error", "验证请求异常: " + e.getMessage(), null);
         }
     }
 
@@ -54,18 +54,18 @@ public class TurnstileValidator {
             if (success) {
                 String expectedHostname = config.getExpectedHostname();
                 if (expectedHostname != null && !expectedHostname.isEmpty() && !expectedHostname.equals(hostname)) {
-                    return new ValidateResult(false, "hostname-mismatch", "hostname 不匹配: " + hostname);
+                    return new ValidateResult(false, "hostname-mismatch", "hostname 不匹配: " + hostname, cdata);
                 }
-                return new ValidateResult(true, null, "验证成功");
+                return new ValidateResult(true, null, "验证成功", cdata);
             } else {
                 Object errorCodes = jsonResponse.get("error-codes");
                 String errorCode = errorCodes instanceof java.util.List<?> list
                     ? String.join(",", list.stream().map(String::valueOf).toList())
                     : "unknown";
-                return new ValidateResult(false, errorCode, "Cloudflare 验证失败");
+                return new ValidateResult(false, errorCode, "Cloudflare 验证失败", cdata);
             }
         } catch (Exception e) {
-            return new ValidateResult(false, "parse-error", "响应解析失败: " + e.getMessage());
+            return new ValidateResult(false, "parse-error", "响应解析失败: " + e.getMessage(), null);
         }
     }
 
@@ -73,23 +73,18 @@ public class TurnstileValidator {
         private final boolean success;
         private final String errorCode;
         private final String message;
+        private final String cdata;
 
-        public ValidateResult(boolean success, String errorCode, String message) {
+        public ValidateResult(boolean success, String errorCode, String message, String cdata) {
             this.success = success;
             this.errorCode = errorCode;
             this.message = message;
+            this.cdata = cdata;
         }
 
-        public boolean isSuccess() {
-            return success;
-        }
-
-        public String getErrorCode() {
-            return errorCode;
-        }
-
-        public String getMessage() {
-            return message;
-        }
+        public boolean isSuccess() { return success; }
+        public String getErrorCode() { return errorCode; }
+        public String getMessage() { return message; }
+        public String getCdata() { return cdata; }
     }
 }

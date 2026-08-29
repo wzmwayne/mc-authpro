@@ -10,6 +10,11 @@ public class VerificationSite {
     }
 
     public String getVerificationUrl(String sessionId) {
-        return config.getStaticSiteBaseUrl() + "?session=" + sessionId;
+        String url = config.getStaticSiteBaseUrl() + "?session=" + sessionId;
+        String token = config.getFrontendToken();
+        if (token != null && !token.isEmpty()) {
+            url += "&token=" + token;
+        }
+        return url;
     }
 }
