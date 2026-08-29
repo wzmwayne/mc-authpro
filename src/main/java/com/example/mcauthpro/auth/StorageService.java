@@ -67,4 +67,9 @@ public class StorageService {
     private File getPlayerFile(String uuid) {
         return new File(dataFolder, uuid + ".yml");
     }
+
+    public int getRegisteredCount() {
+        File[] files = dataFolder.listFiles((dir, name) -> name.endsWith(".yml"));
+        return files != null ? files.length : 0;
+    }
 }

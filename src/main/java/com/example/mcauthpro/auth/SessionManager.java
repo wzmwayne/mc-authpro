@@ -94,6 +94,14 @@ public class SessionManager {
         countdowns.remove(name);
     }
 
+    public int getTurnstileVerifiedCount() {
+        return turnstileVerified.size();
+    }
+
+    public int getLoginVerifiedCount() {
+        return loginVerified.size();
+    }
+
     public void shutdown() {
         cleanupExecutor.shutdownNow();
         countdownTasks.values().forEach(task -> task.cancel(false));

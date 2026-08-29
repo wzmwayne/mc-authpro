@@ -93,6 +93,10 @@ public class PluginConfig {
         return config.getInt("verification.http-timeout-seconds", 10);
     }
 
+    public boolean isVerifyEnabled() {
+        return config.getBoolean("verification.enabled", true);
+    }
+
     public int getVerificationCountdown() {
         return config.getInt("verification.countdown-seconds", 30);
     }

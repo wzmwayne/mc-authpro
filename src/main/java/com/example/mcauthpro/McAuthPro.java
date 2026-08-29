@@ -87,22 +87,60 @@ public class McAuthPro extends JavaPlugin {
         String[] lines = {
             "",
             "&8&m========================================",
-            "&b   ___    __  _                 _       ",
-            "&b  / _ \\  / _\\| |__   ___   ___ | |_     ",
-            "&b | | | | \\ \\ | '_ \\ / _ \\ / _ \\| __|    ",
-            "&b | | | |  \\ \\| | | | (_) | (_) | |_     ",
-            "&b  \\___/   \\/_|_| |_|\\___/ \\___/ \\__|    ",
+            "&b   ___   ____  ___   _   _ _   _ _____ ",
+            "&b  / _ \\ / ___|/ _ \\ | \\ | | | | | ____|",
+            "&b | | | | |  | | | ||  \\| | | | |  _|  ",
+            "&b | |_| | |__| |_| || |\\  | |_| | |___ ",
+            "&b  \\___/ \\____|\\___/ |_| \\_|\\___/|_____|",
             "&8&m========================================",
             "&e  Paper 1.21.x 安全插件 &7v" + getDescription().getVersion(),
-            "&a  ✓ 在线验证已关闭 (online-mode=false)",
-            "&a  ✓ 账号登录 + 人机验证已启用",
-            "&a  ✓ 登录世界已就绪",
+            "&a  在线验证已关闭 (online-mode=false)",
+            "&a  账号登录 + 人机验证已启用",
             "&8&m========================================",
             ""
         };
         for (String line : lines) {
             Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', line));
         }
+        printDiagnostics();
+    }
+
+    private void printDiagnostics() {
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&8&m----------------------------------------"));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&e  &l自检报告"));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&8&m----------------------------------------"));
+
+        // 服务器信息
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', " &7服务器: &f" + Bukkit.getName() + " v" + Bukkit.getVersion()));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', " &7在线模式: &c" + Bukkit.getOnlineMode()));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', " &7玩家上限: &f" + Bukkit.getMaxPlayers()));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', " &7当前在线: &f" + Bukkit.getOnlinePlayers().size()));
+
+        // 世界信息
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', " &7世界数量: &f" + Bukkit.getWorlds().size()));
+        if (loginWorldManager != null && loginWorldManager.getLoginWorld() != null) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', " &7登录世界: &a已启用 &7(&f" + loginWorldManager.getLoginWorld().getName() + "&7)"));
+        } else if (config.isLoginWorldEnabled()) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', " &7登录世界: &e加载中..."));
+        } else {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', " &7登录世界: &c已禁用"));
+        }
+
+        // 验证配置
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', " &7人机验证: &f" + (config.isVerifyEnabled() ? "&a启用" : "&c禁用")));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', " &7验证站点: &f" + config.getStaticSiteBaseUrl()));
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', " &7验证倒计时: &f" + config.getVerificationCountdown() + " 秒"));
+
+        // 玩家数据
+        int registeredCount = storageService.getRegisteredCount();
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', " &7已注册玩家: &f" + registeredCount));
+
+        // Session 状态
+        if (sessionManager != null) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', " &7待验证会话: &f" + sessionManager.getTurnstileVerifiedCount() + " 人机已验证 / " + sessionManager.getLoginVerifiedCount() + " 已登录"));
+        }
+
+        Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', "&8&m----------------------------------------"));
     }
 
     @Override
