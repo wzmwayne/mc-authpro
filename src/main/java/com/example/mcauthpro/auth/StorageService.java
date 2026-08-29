@@ -5,9 +5,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class StorageService {
     private final com.example.mcauthpro.McAuthPro plugin;
@@ -32,7 +30,14 @@ public class StorageService {
         String salt = config.getString("salt", "");
         List<String> ipHistory = config.getStringList("ip-history");
         long registeredAt = config.getLong("registered-at", 0);
-        return new PlayerData(username, uuid, passwordHash, salt, ipHistory, registeredAt);
+        String lastWorld = config.getString("last-location.world", "world");
+        double lastX = config.getDouble("last-location.x", 0);
+        double lastY = config.getDouble("last-location.y", 100);
+        double lastZ = config.getDouble("last-location.z", 0);
+        float lastYaw = (float) config.getDouble("last-location.yaw", 0);
+        float lastPitch = (float) config.getDouble("last-location.pitch", 0);
+        return new PlayerData(username, uuid, passwordHash, salt, ipHistory, registeredAt,
+                             lastWorld, lastX, lastY, lastZ, lastYaw, lastPitch);
     }
 
     public void savePlayer(PlayerData playerData) {
@@ -43,6 +48,12 @@ public class StorageService {
         config.set("salt", playerData.getSalt());
         config.set("ip-history", playerData.getIpHistory());
         config.set("registered-at", playerData.getRegisteredAt());
+        config.set("last-location.world", playerData.getLastWorld());
+        config.set("last-location.x", playerData.getLastX());
+        config.set("last-location.y", playerData.getLastY());
+        config.set("last-location.z", playerData.getLastZ());
+        config.set("last-location.yaw", playerData.getLastYaw());
+        config.set("last-location.pitch", playerData.getLastPitch());
         try {
             config.save(playerFile);
         } catch (IOException e) {

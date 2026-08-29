@@ -74,9 +74,9 @@ public class McAuthPro extends JavaPlugin {
     private void registerListeners() {
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this, authService), this);
         getServer().getPluginManager().registerEvents(new PlayerMoveListener(authService), this);
-        getServer().getPluginManager().registerEvents(new PlayerChatListener(authService), this);
+        getServer().getPluginManager().registerEvents(new PlayerChatListener(this, authService), this);
         getServer().getPluginManager().registerEvents(new PlayerCommandListener(authService), this);
-        getServer().getPluginManager().registerEvents(new PlayerQuitListener(sessionManager), this);
+        getServer().getPluginManager().registerEvents(new PlayerQuitListener(sessionManager, authService), this);
         getServer().getPluginManager().registerEvents(new BlockBreakListener(authService), this);
         getServer().getPluginManager().registerEvents(new BlockPlaceListener(authService), this);
         getServer().getPluginManager().registerEvents(new PlayerInteractListener(authService), this);

@@ -1,6 +1,7 @@
 package com.example.mcauthpro.listener;
 
 import com.example.mcauthpro.auth.AuthService;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -18,9 +19,14 @@ public class PlayerMoveListener implements Listener {
     public void onPlayerMove(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         if (authService.isFullyAuthenticated(player)) return;
-        if (event.getFrom().getX() != event.getTo().getX() ||
-            event.getFrom().getY() != event.getTo().getY() ||
-            event.getFrom().getZ() != event.getTo().getZ()) {
+
+        Location from = event.getFrom();
+        Location to = event.getTo();
+        if (to == null) return;
+
+        if (from.getX() != to.getX() ||
+            from.getY() != to.getY() ||
+            from.getZ() != to.getZ()) {
             event.setCancelled(true);
         }
     }

@@ -3,6 +3,7 @@ package com.example.mcauthpro.auth;
 import com.example.mcauthpro.config.PluginConfig;
 import com.example.mcauthpro.network.RealIpResolver;
 import com.example.mcauthpro.network.TurnstileValidator;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -71,6 +72,28 @@ public class AuthService {
 
     public boolean isFullyAuthenticated(Player player) {
         return sessionManager.isLoginVerified(player);
+    }
+
+    public void saveLastLocation(Player player) {
+        Location loc = player.getLocation();
+        PlayerData playerData = storageService.loadPlayer(player.getUniqueId().toString());
+        if (playerData == null) return;
+        playerData.setLastWorld(loc.getWorld().getName());
+        playerData.setLastX(loc.getX());
+        playerData.setLastY(loc.getY());
+        playerData.setLastZ(loc.getZ());
+        playerData.setLastYaw(loc.getYaw());
+        playerData.setLastPitch(loc.getPitch());
+        storageService.savePlayer(playerData);
+    }
+
+    public Location getLastLocation(Player player) {
+        PlayerData playerData = storageService.loadPlayer(player.getUniqueId().toString());
+        if (playerData == null) return null;
+        org.bukkit.World world = plugin.getServer().getWorld(playerData.getLastWorld());
+        if (world == null) world = plugin.getServer().getWorlds().get(0);
+        return new Location(world, playerData.getLastX(), playerData.getLastY(),
+                           playerData.getLastZ(), playerData.getLastYaw(), playerData.getLastPitch());
     }
 
     public boolean changePassword(Player player, String oldPassword, String newPassword) {

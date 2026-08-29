@@ -12,7 +12,7 @@ import java.util.List;
 public class PlayerCommandListener implements Listener {
     private final AuthService authService;
     private static final List<String> ALLOWED_COMMANDS = Arrays.asList(
-        "/login", "/register", "/verify"
+        "/login", "/register", "/verify", "/changepwd", "/cpwd", "/changepassword"
     );
 
     public PlayerCommandListener(AuthService authService) {

@@ -5,6 +5,7 @@ import com.example.mcauthpro.auth.AuthService;
 import com.example.mcauthpro.auth.SessionManager;
 import com.example.mcauthpro.config.Messages;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.command.Command;
@@ -64,15 +65,15 @@ public class LoginCommand implements CommandExecutor {
             plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
                 if (!player.isOnline()) return;
 
-                World mainWorld = plugin.getServer().getWorlds().get(0);
                 for (World world : plugin.getServer().getWorlds()) {
                     for (Player p : world.getPlayers()) {
                         if (p.getName().equalsIgnoreCase(player.getName()) && !p.equals(player)) {
                             p.kickPlayer(msg.get("world-kick-self"));
-                            break;
                         }
                     }
                 }
+
+                Location lastLoc = authService.getLastLocation(player);
 
                 player.sendTitle(
                     msg.get("login-success-enter-title"),
@@ -83,7 +84,7 @@ public class LoginCommand implements CommandExecutor {
                 plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
                     if (!player.isOnline()) return;
                     player.setGameMode(GameMode.SURVIVAL);
-                    player.teleport(mainWorld.getSpawnLocation());
+                    player.teleport(lastLoc);
                 }, 60L);
             }, 60L);
         } else {
