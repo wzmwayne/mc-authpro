@@ -29,9 +29,6 @@ public class AuthAdminCommand implements CommandExecutor {
             case "rebuildlogin":
                 rebuildLogin(sender);
                 break;
-            case "reload":
-                reloadConfig(sender);
-                break;
             default:
                 sendHelp(sender);
                 break;
@@ -46,14 +43,8 @@ public class AuthAdminCommand implements CommandExecutor {
         sender.sendMessage(ChatColor.GREEN + "登录世界重构完成！");
     }
 
-    private void reloadConfig(CommandSender sender) {
-        sender.sendMessage(ChatColor.YELLOW + "正在重载配置...");
-        sender.sendMessage(ChatColor.GREEN + "配置重载完成！");
-    }
-
     private void sendHelp(CommandSender sender) {
         sender.sendMessage(ChatColor.GOLD + "=== MC AuthPro 管理命令 ===");
         sender.sendMessage(ChatColor.YELLOW + "/authadmin rebuildlogin" + ChatColor.WHITE + " - 重构登录世界");
-        sender.sendMessage(ChatColor.YELLOW + "/authadmin reload" + ChatColor.WHITE + " - 重载配置");
     }
 }
