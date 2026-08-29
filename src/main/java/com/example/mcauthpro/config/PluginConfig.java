@@ -162,4 +162,8 @@ public class PluginConfig {
     public int getLoginWorldWallHeight() {
         return config.getInt("login-world.wall-height", 1);
     }
+
+    public int getVerificationCountdown() {
+        return config.getInt("verification.countdown-seconds", 30);
+    }
 }

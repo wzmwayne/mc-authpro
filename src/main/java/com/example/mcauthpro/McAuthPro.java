@@ -41,7 +41,7 @@ public class McAuthPro extends JavaPlugin {
         this.config = new PluginConfig(this);
         this.storageService = new StorageService(this);
         this.realIpResolver = new RealIpResolver(config);
-        this.sessionManager = new SessionManager();
+        this.sessionManager = new SessionManager(this);
         this.turnstileValidator = new TurnstileValidator(config);
         this.authService = new AuthService(this, storageService, sessionManager, turnstileValidator, realIpResolver, config);
         this.loginWorldManager = new LoginWorldManager(this);
@@ -59,9 +59,9 @@ public class McAuthPro extends JavaPlugin {
     }
 
     private void registerCommands() {
-        getCommand("login").setExecutor(new LoginCommand(authService));
-        getCommand("register").setExecutor(new RegisterCommand(authService));
-        getCommand("verify").setExecutor(new VerifyCommand(authService));
+        getCommand("login").setExecutor(new LoginCommand(this, authService));
+        getCommand("register").setExecutor(new RegisterCommand(this, authService));
+        getCommand("verify").setExecutor(new VerifyCommand(this, authService));
         getCommand("authadmin").setExecutor(new AuthAdminCommand(this));
     }
 

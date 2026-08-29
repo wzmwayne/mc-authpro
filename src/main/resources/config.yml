@@ -19,6 +19,8 @@ verification:
   expected-hostname: ""
   # 请求超时（秒）
   http-timeout-seconds: 10
+  # 人机验证倒计时（秒）
+  countdown-seconds: 30
 
 session:
   # 会话超时（秒）

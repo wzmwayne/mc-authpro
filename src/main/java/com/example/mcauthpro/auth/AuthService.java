@@ -68,8 +68,7 @@ public class AuthService {
         String remoteIp = realIpResolver.getRealIp(player);
         TurnstileValidator.ValidateResult result = turnstileValidator.validate(token, remoteIp);
         if (result.isSuccess()) {
-            sessionManager.markVerified(player);
-            sessionManager.removeSession(player);
+            sessionManager.markTurnstileVerified(player);
             return true;
         }
         return false;
@@ -79,7 +78,7 @@ public class AuthService {
         if (!isRegistered(player)) {
             return false;
         }
-        return sessionManager.isVerified(player);
+        return sessionManager.isFullyVerified(player);
     }
 
     public SessionManager getSessionManager() {
