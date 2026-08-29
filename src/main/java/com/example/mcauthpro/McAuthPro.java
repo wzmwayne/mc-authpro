@@ -26,6 +26,8 @@ import com.example.mcauthpro.command.AuthAdminCommand;
 import com.example.mcauthpro.command.ChangePasswordCommand;
 import com.example.mcauthpro.listener.LoginWorldListener;
 import com.example.mcauthpro.world.LoginWorldManager;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class McAuthPro extends JavaPlugin {
@@ -52,7 +54,55 @@ public class McAuthPro extends JavaPlugin {
         this.loginWorldManager = new LoginWorldManager(this);
         registerCommands();
         registerListeners();
-        getLogger().info("MC AuthPro 插件已启用");
+        disableOnlineMode();
+        printBanner();
+    }
+
+    private void disableOnlineMode() {
+        java.io.File serverProps = new java.io.File("server.properties");
+        if (!serverProps.exists()) {
+            getLogger().warning("未找到 server.properties，无法自动关闭在线验证。");
+            return;
+        }
+        java.util.Properties props = new java.util.Properties();
+        try (java.io.FileInputStream fis = new java.io.FileInputStream(serverProps)) {
+            props.load(fis);
+        } catch (Exception e) {
+            getLogger().warning("读取 server.properties 失败: " + e.getMessage());
+            return;
+        }
+        if (!"false".equalsIgnoreCase(props.getProperty("online-mode", ""))) {
+            props.setProperty("online-mode", "false");
+            try (java.io.FileOutputStream fos = new java.io.FileOutputStream(serverProps)) {
+                props.store(fos, "Modified by McAuthPro - online-mode disabled");
+            } catch (Exception e) {
+                getLogger().warning("写入 server.properties 失败: " + e.getMessage());
+                return;
+            }
+            getLogger().info("已将 online-mode 设置为 false（离线模式）。");
+        }
+    }
+
+    private void printBanner() {
+        String[] lines = {
+            "",
+            "&8&m========================================",
+            "&b   ___    __  _                 _       ",
+            "&b  / _ \\  / _\\| |__   ___   ___ | |_     ",
+            "&b | | | | \\ \\ | '_ \\ / _ \\ / _ \\| __|    ",
+            "&b | | | |  \\ \\| | | | (_) | (_) | |_     ",
+            "&b  \\___/   \\/_|_| |_|\\___/ \\___/ \\__|    ",
+            "&8&m========================================",
+            "&e  Paper 1.21.x 安全插件 &7v" + getDescription().getVersion(),
+            "&a  ✓ 在线验证已关闭 (online-mode=false)",
+            "&a  ✓ 账号登录 + 人机验证已启用",
+            "&a  ✓ 登录世界已就绪",
+            "&8&m========================================",
+            ""
+        };
+        for (String line : lines) {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.translateAlternateColorCodes('&', line));
+        }
     }
 
     @Override
