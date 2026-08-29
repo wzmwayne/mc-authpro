@@ -8,8 +8,9 @@ player-only: "&c此命令只能由玩家执行。"
 
 # ========== 加入服务器 ==========
 join-welcome: "&a欢迎回来，{player}！"
-join-registered-prompt: "&e请执行：/login <密码>"
-join-unregistered-prompt: "&e请执行：/reg <密码> <密码>"
+
+# ========== login世界重名 ==========
+login-duplicate: "&c你已有一个会话在进行中，请勿重复登录。"
 
 # ========== 人机验证 ==========
 verify-url-message: |
@@ -43,11 +44,16 @@ login-usage: "&c用法：/login <密码>"
 login-already-logged-in: "&e你已登录。"
 login-not-registered: "&c你未注册，请先执行：/reg <密码> <密码>"
 login-not-verified: "&c请先完成人机验证：/verify <令牌>"
-login-success: "&a登录成功！欢迎回来，{player}！"
-login-success-title: "&a登录成功"
-login-success-subtitle: "&f欢迎回来，{player}！"
+login-success-title: "&a密码正确，准备进入……"
+login-success-subtitle: "&f扫描账户中"
+login-success-enter-title: "&a进入服务器"
+login-success-enter-subtitle: "&f欢迎回来，{player}！"
 login-failed: "&c密码错误，请重试。"
 login-failed-kick: "&c密码错误，请重新加入并重试"
+
+# ========== world世界顶号 ==========
+world-kick-self: "&c检测到账号异常登录，如果不是你本人操作，请立即使用 /changepwd 修改密码。"
+world-kick-other: "&a你已成功顶号上线。"
 
 # ========== 注册 ==========
 register-usage: "&c用法：/reg <密码> <密码>"
@@ -63,6 +69,13 @@ register-success-hint: |
   &e=== 注册成功 ===
   &f请执行：/login <密码>
 register-failed: "&c注册失败，请稍后重试。"
+
+# ========== 修改密码 ==========
+changepwd-usage: "&c用法：/changepwd <旧密码> <新密码>"
+changepwd-not-logged-in: "&c请先登录。"
+changepwd-old-wrong: "&c旧密码错误。"
+changepwd-too-short: "&c新密码长度至少为6位。"
+changepwd-success: "&a密码修改成功！"
 
 # ========== 管理命令 ==========
 admin-no-permission: "&c你没有权限执行此命令。"

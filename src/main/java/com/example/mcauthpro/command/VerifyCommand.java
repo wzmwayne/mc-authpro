@@ -34,11 +34,6 @@ public class VerifyCommand implements CommandExecutor {
             return true;
         }
 
-        if (!sessionManager.hasSession(player)) {
-            player.sendMessage(msg.get("verify-no-session"));
-            return true;
-        }
-
         if (args.length != 1) {
             player.sendMessage(msg.get("verify-usage"));
             return true;
@@ -47,7 +42,6 @@ public class VerifyCommand implements CommandExecutor {
         String token = args[0];
         if (authService.verifyTurnstileToken(player, token)) {
             sessionManager.stopCountdown(player);
-            sessionManager.markTurnstileVerified(player);
 
             if (authService.isRegistered(player)) {
                 player.sendTitle(

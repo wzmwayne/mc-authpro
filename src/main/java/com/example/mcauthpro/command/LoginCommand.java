@@ -5,6 +5,7 @@ import com.example.mcauthpro.auth.AuthService;
 import com.example.mcauthpro.auth.SessionManager;
 import com.example.mcauthpro.config.Messages;
 import org.bukkit.GameMode;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -53,13 +54,38 @@ public class LoginCommand implements CommandExecutor {
         String password = args[0];
         if (authService.login(player, password)) {
             sessionManager.markLoginVerified(player);
-            player.setGameMode(GameMode.SURVIVAL);
+
             player.sendTitle(
                 msg.get("login-success-title"),
-                msg.get("login-success-subtitle", "{player}", player.getName()),
-                0, 60, 20
+                msg.get("login-success-subtitle"),
+                0, 25, 5
             );
-            player.sendMessage(msg.get("login-success", "{player}", player.getName()));
+
+            plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+                if (!player.isOnline()) return;
+
+                World mainWorld = plugin.getServer().getWorlds().get(0);
+                for (World world : plugin.getServer().getWorlds()) {
+                    for (Player p : world.getPlayers()) {
+                        if (p.getName().equalsIgnoreCase(player.getName()) && !p.equals(player)) {
+                            p.kickPlayer(msg.get("world-kick-self"));
+                            break;
+                        }
+                    }
+                }
+
+                player.sendTitle(
+                    msg.get("login-success-enter-title"),
+                    msg.get("login-success-enter-subtitle", "{player}", player.getName()),
+                    0, 40, 20
+                );
+
+                plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
+                    if (!player.isOnline()) return;
+                    player.setGameMode(GameMode.SURVIVAL);
+                    player.teleport(mainWorld.getSpawnLocation());
+                }, 60L);
+            }, 60L);
         } else {
             player.sendMessage(msg.get("login-failed"));
             player.kickPlayer(msg.get("login-failed-kick"));

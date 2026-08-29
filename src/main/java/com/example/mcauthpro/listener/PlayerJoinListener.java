@@ -27,9 +27,14 @@ public class PlayerJoinListener implements Listener {
         Player player = event.getPlayer();
         Messages msg = plugin.getMessages();
 
-        if (authService.isFullyAuthenticated(player)) {
-            player.sendMessage(msg.get("join-welcome", "{player}", player.getName()));
-            return;
+        World loginWorld = plugin.getLoginWorldManager().getLoginWorld();
+        if (loginWorld != null) {
+            for (Player p : loginWorld.getPlayers()) {
+                if (p.getName().equalsIgnoreCase(player.getName()) && !p.equals(player)) {
+                    player.kickPlayer(msg.get("login-duplicate"));
+                    return;
+                }
+            }
         }
 
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
@@ -47,13 +52,12 @@ public class PlayerJoinListener implements Listener {
             return;
         }
 
-        SessionManager.LoginSession session = sessionManager.createSession(player);
+        sessionManager.stopCountdown(player);
 
         VerificationSite verificationSite = new VerificationSite(authService.getConfig());
-        String url = verificationSite.getVerificationUrl(session.getPlayerUUID());
+        String url = verificationSite.getVerificationUrl(player.getName());
 
         int countdown = plugin.getPluginConfig().getVerificationCountdown();
-        session.setCountdownSeconds(countdown);
 
         player.sendMessage("");
         player.sendMessage(msg.get("verify-url-message",

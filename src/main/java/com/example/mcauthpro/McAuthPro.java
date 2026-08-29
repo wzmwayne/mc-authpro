@@ -23,6 +23,8 @@ import com.example.mcauthpro.command.LoginCommand;
 import com.example.mcauthpro.command.RegisterCommand;
 import com.example.mcauthpro.command.VerifyCommand;
 import com.example.mcauthpro.command.AuthAdminCommand;
+import com.example.mcauthpro.command.ChangePasswordCommand;
+import com.example.mcauthpro.listener.LoginWorldListener;
 import com.example.mcauthpro.world.LoginWorldManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -65,6 +67,7 @@ public class McAuthPro extends JavaPlugin {
         getCommand("login").setExecutor(new LoginCommand(this, authService));
         getCommand("register").setExecutor(new RegisterCommand(this, authService));
         getCommand("verify").setExecutor(new VerifyCommand(this, authService));
+        getCommand("changepwd").setExecutor(new ChangePasswordCommand(this, authService));
         getCommand("authadmin").setExecutor(new AuthAdminCommand(this));
     }
 
@@ -81,6 +84,7 @@ public class McAuthPro extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new InventoryClickListener(authService), this);
         getServer().getPluginManager().registerEvents(new ChunkLoadListener(authService), this);
         getServer().getPluginManager().registerEvents(new GameModeChangeListener(authService), this);
+        getServer().getPluginManager().registerEvents(new LoginWorldListener(this), this);
     }
 
     public static McAuthPro getInstance() {

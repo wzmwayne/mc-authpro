@@ -3,7 +3,6 @@ package com.example.mcauthpro.auth;
 import com.example.mcauthpro.config.PluginConfig;
 import com.example.mcauthpro.network.RealIpResolver;
 import com.example.mcauthpro.network.TurnstileValidator;
-import com.example.mcauthpro.auth.SessionManager.LoginSession;
 import org.bukkit.entity.Player;
 
 import java.util.List;
@@ -61,10 +60,6 @@ public class AuthService {
     }
 
     public boolean verifyTurnstileToken(Player player, String token) {
-        LoginSession session = sessionManager.getSession(player);
-        if (session == null) {
-            return false;
-        }
         String remoteIp = realIpResolver.getRealIp(player);
         TurnstileValidator.ValidateResult result = turnstileValidator.validate(token, remoteIp);
         if (result.isSuccess()) {
@@ -75,10 +70,29 @@ public class AuthService {
     }
 
     public boolean isFullyAuthenticated(Player player) {
-        if (!isRegistered(player)) {
+        return sessionManager.isLoginVerified(player);
+    }
+
+    public boolean changePassword(Player player, String oldPassword, String newPassword) {
+        PlayerData playerData = storageService.loadPlayer(player.getUniqueId().toString());
+        if (playerData == null) {
             return false;
         }
-        return sessionManager.isFullyVerified(player);
+        if (!playerData.verifyPassword(oldPassword)) {
+            return false;
+        }
+        String newSalt = PasswordHasher.generateSalt();
+        String newHash = PasswordHasher.hashPassword(newPassword, newSalt);
+        PlayerData updated = new PlayerData(
+            playerData.getUsername(),
+            playerData.getUuid(),
+            newHash,
+            newSalt,
+            playerData.getIpHistory(),
+            playerData.getRegisteredAt()
+        );
+        storageService.savePlayer(updated);
+        return true;
     }
 
     public SessionManager getSessionManager() {

@@ -23,10 +23,11 @@ commands:
     description: 注销
     usage: /logout
     permission: mcauthpro.logout
-  changepassword:
+  changepwd:
     description: 修改密码
-    usage: /changepassword <旧密码> <新密码>
+    usage: /changepwd <旧密码> <新密码>
     permission: mcauthpro.changepassword
+    aliases: [changepassword, cpwd]
   authadmin:
     description: 管理员命令
     usage: /authadmin <子命令>

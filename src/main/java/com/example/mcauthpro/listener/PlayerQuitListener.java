@@ -16,6 +16,6 @@ public class PlayerQuitListener implements Listener {
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        sessionManager.removeSession(player);
+        sessionManager.remove(player);
     }
 }
