@@ -43,7 +43,7 @@ public class VerifyCommand implements CommandExecutor {
         String token = args[1];
 
         String playerName = sessionManager.getPlayerNameByKey(key);
-        if (playerName == null || !playerName.equalsIgnoreCase(player.getName())) {
+        if (playerName == null || !playerName.equals(player.getName())) {
             player.sendMessage(msg.get("verify-invalid-key"));
             return true;
         }

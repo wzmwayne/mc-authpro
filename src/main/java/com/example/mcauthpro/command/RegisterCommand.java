@@ -44,6 +44,11 @@ public class RegisterCommand implements CommandExecutor {
             return true;
         }
 
+        if (!AuthService.isValidPlayerName(player.getName())) {
+            player.sendMessage("&c玩家名只允许包含字母和数字。".replace("&", "§"));
+            return true;
+        }
+
         if (args.length != 2) {
             player.sendMessage(msg.get("register-usage"));
             return true;

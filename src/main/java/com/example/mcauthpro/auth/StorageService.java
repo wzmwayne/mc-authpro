@@ -18,8 +18,8 @@ public class StorageService {
         }
     }
 
-    public PlayerData loadPlayer(String uuid) {
-        File playerFile = getPlayerFile(uuid);
+    public PlayerData loadPlayer(String playerName) {
+        File playerFile = getPlayerFile(playerName);
         if (!playerFile.exists()) {
             return null;
         }
@@ -35,12 +35,12 @@ public class StorageService {
         double lastZ = config.getDouble("last-location.z", 0);
         float lastYaw = (float) config.getDouble("last-location.yaw", 0);
         float lastPitch = (float) config.getDouble("last-location.pitch", 0);
-        return new PlayerData(username, uuid, passwordHash, salt, ipHistory, registeredAt,
+        return new PlayerData(username, passwordHash, salt, ipHistory, registeredAt,
                              lastWorld, lastX, lastY, lastZ, lastYaw, lastPitch);
     }
 
     public void savePlayer(PlayerData playerData) {
-        File playerFile = getPlayerFile(playerData.getUuid());
+        File playerFile = getPlayerFile(playerData.getUsername());
         YamlConfiguration config = new YamlConfiguration();
         config.set("username", playerData.getUsername());
         config.set("password-hash", playerData.getPasswordHash());
@@ -60,16 +60,16 @@ public class StorageService {
         }
     }
 
-    public boolean isRegistered(String uuid) {
-        return getPlayerFile(uuid).exists();
-    }
-
-    private File getPlayerFile(String uuid) {
-        return new File(dataFolder, uuid + ".yml");
+    public boolean isRegistered(String playerName) {
+        return getPlayerFile(playerName).exists();
     }
 
     public int getRegisteredCount() {
         File[] files = dataFolder.listFiles((dir, name) -> name.endsWith(".yml"));
         return files != null ? files.length : 0;
+    }
+
+    private File getPlayerFile(String playerName) {
+        return new File(dataFolder, playerName + ".yml");
     }
 }

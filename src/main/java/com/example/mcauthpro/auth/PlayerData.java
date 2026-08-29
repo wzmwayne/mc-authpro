@@ -4,7 +4,6 @@ import java.util.List;
 
 public class PlayerData {
     private final String username;
-    private final String uuid;
     private String passwordHash;
     private String salt;
     private List<String> ipHistory;
@@ -16,18 +15,17 @@ public class PlayerData {
     private float lastYaw;
     private float lastPitch;
 
-    public PlayerData(String username, String uuid, String passwordHash, String salt,
+    public PlayerData(String username, String passwordHash, String salt,
                       List<String> ipHistory, long registeredAt) {
-        this(username, uuid, passwordHash, salt, ipHistory, registeredAt,
+        this(username, passwordHash, salt, ipHistory, registeredAt,
              "world", 0, 100, 0, 0f, 0f);
     }
 
-    public PlayerData(String username, String uuid, String passwordHash, String salt,
+    public PlayerData(String username, String passwordHash, String salt,
                       List<String> ipHistory, long registeredAt,
                       String lastWorld, double lastX, double lastY, double lastZ,
                       float lastYaw, float lastPitch) {
         this.username = username;
-        this.uuid = uuid;
         this.passwordHash = passwordHash;
         this.salt = salt;
         this.ipHistory = ipHistory;
@@ -41,7 +39,6 @@ public class PlayerData {
     }
 
     public String getUsername() { return username; }
-    public String getUuid() { return uuid; }
     public String getPasswordHash() { return passwordHash; }
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
     public String getSalt() { return salt; }

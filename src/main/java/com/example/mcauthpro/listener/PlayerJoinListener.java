@@ -28,10 +28,15 @@ public class PlayerJoinListener implements Listener {
         Player player = event.getPlayer();
         Messages msg = plugin.getMessages();
 
+        if (!AuthService.isValidPlayerName(player.getName())) {
+            player.kickPlayer("&c玩家名只允许包含字母和数字。".replace("&", "§"));
+            return;
+        }
+
         World loginWorld = plugin.getLoginWorldManager().getLoginWorld();
         if (loginWorld != null) {
             for (Player p : loginWorld.getPlayers()) {
-                if (p.getName().equalsIgnoreCase(player.getName()) && !p.equals(player)) {
+                if (p.getName().equals(player.getName()) && !p.equals(player)) {
                     player.kickPlayer(msg.get("login-duplicate"));
                     return;
                 }

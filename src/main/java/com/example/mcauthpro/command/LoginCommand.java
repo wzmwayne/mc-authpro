@@ -67,7 +67,7 @@ public class LoginCommand implements CommandExecutor {
 
                 for (World world : plugin.getServer().getWorlds()) {
                     for (Player p : world.getPlayers()) {
-                        if (p.getName().equalsIgnoreCase(player.getName()) && !p.equals(player)) {
+                        if (p.getName().equals(player.getName()) && !p.equals(player)) {
                             p.kickPlayer(msg.get("world-kick-self"));
                         }
                     }

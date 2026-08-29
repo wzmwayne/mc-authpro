@@ -31,7 +31,7 @@ public class AuthService {
     }
 
     public boolean isRegistered(Player player) {
-        return storageService.isRegistered(player.getUniqueId().toString());
+        return storageService.isRegistered(player.getName());
     }
 
     public boolean register(Player player, String password) {
@@ -42,7 +42,6 @@ public class AuthService {
         String hash = PasswordHasher.hashPassword(password, salt);
         PlayerData playerData = new PlayerData(
             player.getName(),
-            player.getUniqueId().toString(),
             hash,
             salt,
             List.of(realIpResolver.getRealIp(player)),
@@ -53,7 +52,7 @@ public class AuthService {
     }
 
     public boolean login(Player player, String password) {
-        PlayerData playerData = storageService.loadPlayer(player.getUniqueId().toString());
+        PlayerData playerData = storageService.loadPlayer(player.getName());
         if (playerData == null) {
             return false;
         }
@@ -75,9 +74,13 @@ public class AuthService {
         return sessionManager.isLoginVerified(player);
     }
 
+    public static boolean isValidPlayerName(String name) {
+        return name != null && name.matches("^[a-zA-Z0-9]+$");
+    }
+
     public void saveLastLocation(Player player) {
         Location loc = player.getLocation();
-        PlayerData playerData = storageService.loadPlayer(player.getUniqueId().toString());
+        PlayerData playerData = storageService.loadPlayer(player.getName());
         if (playerData == null) return;
         playerData.setLastWorld(loc.getWorld().getName());
         playerData.setLastX(loc.getX());
@@ -89,7 +92,7 @@ public class AuthService {
     }
 
     public Location getLastLocation(Player player) {
-        PlayerData playerData = storageService.loadPlayer(player.getUniqueId().toString());
+        PlayerData playerData = storageService.loadPlayer(player.getName());
         if (playerData == null) return null;
         org.bukkit.World world = plugin.getServer().getWorld(playerData.getLastWorld());
         if (world == null) world = plugin.getServer().getWorlds().get(0);
@@ -98,7 +101,7 @@ public class AuthService {
     }
 
     public boolean changePassword(Player player, String oldPassword, String newPassword) {
-        PlayerData playerData = storageService.loadPlayer(player.getUniqueId().toString());
+        PlayerData playerData = storageService.loadPlayer(player.getName());
         if (playerData == null) {
             return false;
         }
@@ -109,7 +112,6 @@ public class AuthService {
         String newHash = PasswordHasher.hashPassword(newPassword, newSalt);
         PlayerData updated = new PlayerData(
             playerData.getUsername(),
-            playerData.getUuid(),
             newHash,
             newSalt,
             playerData.getIpHistory(),
