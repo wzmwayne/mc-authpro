@@ -66,3 +66,10 @@ verification-chamber:
 anti-dos:
   max-concurrent-unauth: 5
   verification-timeout: 300
+
+login-world:
+  enabled: true
+  name: "login"
+  platform-y: 100
+  platform-size: 2
+  wall-height: 1

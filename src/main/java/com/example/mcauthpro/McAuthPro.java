@@ -21,6 +21,8 @@ import com.example.mcauthpro.listener.GameModeChangeListener;
 import com.example.mcauthpro.command.LoginCommand;
 import com.example.mcauthpro.command.RegisterCommand;
 import com.example.mcauthpro.command.VerifyCommand;
+import com.example.mcauthpro.command.AuthAdminCommand;
+import com.example.mcauthpro.world.LoginWorldManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class McAuthPro extends JavaPlugin {
@@ -31,6 +33,7 @@ public class McAuthPro extends JavaPlugin {
     private SessionManager sessionManager;
     private RealIpResolver realIpResolver;
     private TurnstileValidator turnstileValidator;
+    private LoginWorldManager loginWorldManager;
 
     @Override
     public void onEnable() {
@@ -41,6 +44,7 @@ public class McAuthPro extends JavaPlugin {
         this.sessionManager = new SessionManager();
         this.turnstileValidator = new TurnstileValidator(config);
         this.authService = new AuthService(this, storageService, sessionManager, turnstileValidator, realIpResolver, config);
+        this.loginWorldManager = new LoginWorldManager(this);
         registerCommands();
         registerListeners();
         getLogger().info("MC AuthPro 插件已启用");
@@ -58,6 +62,7 @@ public class McAuthPro extends JavaPlugin {
         getCommand("login").setExecutor(new LoginCommand(authService));
         getCommand("register").setExecutor(new RegisterCommand(authService));
         getCommand("verify").setExecutor(new VerifyCommand(authService));
+        getCommand("authadmin").setExecutor(new AuthAdminCommand(this));
     }
 
     private void registerListeners() {
@@ -93,5 +98,9 @@ public class McAuthPro extends JavaPlugin {
 
     public RealIpResolver getRealIpResolver() {
         return realIpResolver;
+    }
+
+    public LoginWorldManager getLoginWorldManager() {
+        return loginWorldManager;
     }
 }

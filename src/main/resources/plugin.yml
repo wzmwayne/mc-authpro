@@ -31,6 +31,7 @@ commands:
     description: 管理员命令
     usage: /authadmin <子命令>
     permission: mcauthpro.admin
+    aliases: [ma]
 
 permissions:
   mcauthpro.login:

@@ -142,4 +142,24 @@ public class PluginConfig {
     public int getVerificationTimeout() {
         return config.getInt("anti-dos.verification-timeout", 300);
     }
+
+    public boolean isLoginWorldEnabled() {
+        return config.getBoolean("login-world.enabled", true);
+    }
+
+    public String getLoginWorldName() {
+        return config.getString("login-world.name", "login");
+    }
+
+    public int getLoginWorldPlatformY() {
+        return config.getInt("login-world.platform-y", 100);
+    }
+
+    public int getLoginWorldPlatformSize() {
+        return config.getInt("login-world.platform-size", 2);
+    }
+
+    public int getLoginWorldWallHeight() {
+        return config.getInt("login-world.wall-height", 1);
+    }
 }

@@ -38,31 +38,27 @@ public class PlayerJoinListener implements Listener {
         }
 
         plugin.getServer().getScheduler().runTaskLater(plugin, () -> {
-            teleportToVerificationChamber(player);
+            teleportToLoginWorld(player);
         }, 5L);
     }
 
-    private void teleportToVerificationChamber(Player player) {
+    private void teleportToLoginWorld(Player player) {
         if (player == null || !player.isOnline()) return;
 
-        String worldName = plugin.getPluginConfig().getChamberWorld();
-        World world = plugin.getServer().getWorld(worldName);
-        if (world == null) {
-            world = plugin.getServer().getWorlds().get(0);
+        World loginWorld = plugin.getLoginWorldManager().getLoginWorld();
+        if (loginWorld == null) {
+            loginWorld = plugin.getServer().getWorlds().get(0);
         }
 
-        double x = plugin.getPluginConfig().getChamberX();
-        double y = plugin.getPluginConfig().getChamberY();
-        double z = plugin.getPluginConfig().getChamberZ();
+        Location loc = plugin.getLoginWorldManager().getSpawnLocation();
+        if (loc == null) {
+            loc = loginWorld.getSpawnLocation();
+        }
 
-        Location loc = new Location(world, x, y, z);
         player.teleport(loc);
 
         if (plugin.getPluginConfig().isForceSpectator()) {
             player.setGameMode(GameMode.SPECTATOR);
         }
-
-        int viewDistance = plugin.getPluginConfig().getMaxViewDistance();
-        player.setViewDistance(viewDistance);
     }
 }
