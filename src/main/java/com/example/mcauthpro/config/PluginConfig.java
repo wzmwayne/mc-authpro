@@ -1,18 +1,63 @@
 package com.example.mcauthpro.config;
 
+import com.example.mcauthpro.McAuthPro;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.Set;
 
 public class PluginConfig {
     private final YamlConfiguration config;
 
-    public PluginConfig(com.example.mcauthpro.McAuthPro plugin) {
+    public PluginConfig(McAuthPro plugin) {
         File configFile = new File(plugin.getDataFolder(), "config.yml");
+        plugin.getDataFolder().mkdirs();
+
+        YamlConfiguration defaultConfig = loadDefaultConfig(plugin);
+
         if (!configFile.exists()) {
             plugin.saveResource("config.yml", false);
         }
+
         this.config = YamlConfiguration.loadConfiguration(configFile);
+
+        boolean patched = patchMissingKeys(defaultConfig, this.config);
+
+        if (patched) {
+            try {
+                this.config.save(configFile);
+                plugin.getLogger().info("已自动补全 config.yml 缺失的配置项。");
+            } catch (Exception e) {
+                plugin.getLogger().warning("保存 config.yml 失败: " + e.getMessage());
+            }
+        }
+    }
+
+    private YamlConfiguration loadDefaultConfig(McAuthPro plugin) {
+        InputStream is = plugin.getResource("config.yml");
+        if (is == null) {
+            return new YamlConfiguration();
+        }
+        InputStreamReader reader = new InputStreamReader(is, StandardCharsets.UTF_8);
+        return YamlConfiguration.loadConfiguration(reader);
+    }
+
+    private boolean patchMissingKeys(YamlConfiguration defaults, YamlConfiguration target) {
+        boolean patched = false;
+        Set<String> keys = defaults.getKeys(true);
+        for (String key : keys) {
+            if (defaults.isConfigurationSection(key)) {
+                continue;
+            }
+            if (!target.contains(key)) {
+                target.set(key, defaults.get(key));
+                patched = true;
+            }
+        }
+        return patched;
     }
 
     public String getStaticSiteBaseUrl() {
