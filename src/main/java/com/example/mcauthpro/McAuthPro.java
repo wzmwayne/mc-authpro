@@ -54,7 +54,9 @@ public class McAuthPro extends JavaPlugin {
         this.loginWorldManager = new LoginWorldManager(this);
         registerCommands();
         registerListeners();
-        disableOnlineMode();
+        if (config.isAutoDisableOnlineMode()) {
+            disableOnlineMode();
+        }
         printBanner();
     }
 
@@ -87,7 +89,7 @@ public class McAuthPro extends JavaPlugin {
         String[] lines = {
             "",
             "&8&m========================================",
-            "&b  █████╗ ██╗   ██╗████████╗██╗  ██╗██████╗ ██████╗  ██████╗ ",
+            "&b   █████╗ ██╗   ██╗████████╗██╗  ██╗██████╗ ██████╗  ██████╗ ",
             "&b  ██╔══██╗██║   ██║╚══██╔══╝██║  ██║██╔══██╗██╔══██╗██╔═══██╗",
             "&b  ███████║██║   ██║   ██║   ███████║██████╔╝██████╔╝██║   ██║",
             "&b  ██╔══██║██║   ██║   ██║   ██╔══██║██╔═══╝ ██╔══██╗██║   ██║",

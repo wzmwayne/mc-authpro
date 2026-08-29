@@ -97,6 +97,10 @@ public class PluginConfig {
         return config.getBoolean("verification.enabled", true);
     }
 
+    public boolean isAutoDisableOnlineMode() {
+        return config.getBoolean("verification.auto-disable-online-mode", true);
+    }
+
     public int getVerificationCountdown() {
         return config.getInt("verification.countdown-seconds", 30);
     }

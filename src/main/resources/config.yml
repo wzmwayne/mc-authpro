@@ -10,6 +10,8 @@
 verification:
   # 是否启用验证模块，false 则跳过所有人机验证
   enabled: true
+  # 启动时自动修改 server.properties 关闭在线验证（online-mode=false）
+  auto-disable-online-mode: true
   # 静态页面地址（前端 Turnstile 页面，由 GitHub Pages 托管）
   static-site-base-url: "https://wzml.cc.cd/mc-authpro"
   # Cloudflare Siteverify API 地址（服务端验证令牌）
