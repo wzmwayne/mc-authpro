@@ -1,7 +1,7 @@
 package com.example.mcauthpro.command;
 
 import com.example.mcauthpro.McAuthPro;
-import org.bukkit.ChatColor;
+import com.example.mcauthpro.config.Messages;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -15,8 +15,10 @@ public class AuthAdminCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        Messages msg = plugin.getMessages();
+
         if (!sender.hasPermission("mcauthpro.admin")) {
-            sender.sendMessage(ChatColor.RED + "你没有权限执行此命令。");
+            sender.sendMessage(msg.get("admin-no-permission"));
             return true;
         }
 
@@ -38,13 +40,15 @@ public class AuthAdminCommand implements CommandExecutor {
     }
 
     private void rebuildLogin(CommandSender sender) {
-        sender.sendMessage(ChatColor.YELLOW + "正在重构登录世界...");
+        Messages msg = plugin.getMessages();
+        sender.sendMessage(msg.get("admin-rebuilding"));
         plugin.getLoginWorldManager().rebuildWorld();
-        sender.sendMessage(ChatColor.GREEN + "登录世界重构完成！");
+        sender.sendMessage(msg.get("admin-rebuild-done"));
     }
 
     private void sendHelp(CommandSender sender) {
-        sender.sendMessage(ChatColor.GOLD + "=== MC AuthPro 管理命令 ===");
-        sender.sendMessage(ChatColor.YELLOW + "/authadmin rebuildlogin" + ChatColor.WHITE + " - 重构登录世界");
+        Messages msg = plugin.getMessages();
+        sender.sendMessage(msg.get("admin-help-title"));
+        sender.sendMessage(msg.get("admin-rebuildlogin"));
     }
 }

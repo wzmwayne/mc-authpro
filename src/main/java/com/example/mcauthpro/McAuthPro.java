@@ -1,6 +1,7 @@
 package com.example.mcauthpro;
 
 import com.example.mcauthpro.config.PluginConfig;
+import com.example.mcauthpro.config.Messages;
 import com.example.mcauthpro.auth.AuthService;
 import com.example.mcauthpro.auth.SessionManager;
 import com.example.mcauthpro.auth.StorageService;
@@ -28,6 +29,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class McAuthPro extends JavaPlugin {
     private static McAuthPro instance;
     private PluginConfig config;
+    private Messages messages;
     private AuthService authService;
     private StorageService storageService;
     private SessionManager sessionManager;
@@ -39,6 +41,7 @@ public class McAuthPro extends JavaPlugin {
     public void onEnable() {
         instance = this;
         this.config = new PluginConfig(this);
+        this.messages = new Messages(this);
         this.storageService = new StorageService(this);
         this.realIpResolver = new RealIpResolver(config);
         this.sessionManager = new SessionManager(this);
@@ -86,6 +89,10 @@ public class McAuthPro extends JavaPlugin {
 
     public PluginConfig getPluginConfig() {
         return config;
+    }
+
+    public Messages getMessages() {
+        return messages;
     }
 
     public AuthService getAuthService() {

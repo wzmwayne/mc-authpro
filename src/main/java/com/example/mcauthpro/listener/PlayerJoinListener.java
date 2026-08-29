@@ -3,8 +3,8 @@ package com.example.mcauthpro.listener;
 import com.example.mcauthpro.McAuthPro;
 import com.example.mcauthpro.auth.AuthService;
 import com.example.mcauthpro.auth.SessionManager;
+import com.example.mcauthpro.config.Messages;
 import com.example.mcauthpro.network.VerificationSite;
-import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -25,9 +25,10 @@ public class PlayerJoinListener implements Listener {
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        Messages msg = plugin.getMessages();
 
         if (authService.isFullyAuthenticated(player)) {
-            player.sendMessage(ChatColor.GREEN + "欢迎回来，" + player.getName() + "！");
+            player.sendMessage(msg.get("join-welcome", "{player}", player.getName()));
             return;
         }
 
@@ -39,6 +40,7 @@ public class PlayerJoinListener implements Listener {
 
     private void startVerificationFlow(Player player) {
         SessionManager sessionManager = plugin.getSessionManager();
+        Messages msg = plugin.getMessages();
 
         if (sessionManager.isTurnstileVerified(player)) {
             showLoginPrompt(player);
@@ -54,24 +56,30 @@ public class PlayerJoinListener implements Listener {
         session.setCountdownSeconds(countdown);
 
         player.sendMessage("");
-        player.sendMessage(ChatColor.GREEN + "§e=== 人机验证 ===");
-        player.sendMessage(ChatColor.YELLOW + "请在浏览器中打开以下链接完成验证：");
-        player.sendMessage(ChatColor.AQUA + url);
-        player.sendMessage(ChatColor.YELLOW + "复制令牌后执行：/verify <令牌>");
-        player.sendMessage(ChatColor.RED + "§c请在 " + countdown + " 秒内完成，否则将被踢出！");
+        player.sendMessage(msg.get("verify-url-message",
+            "{url}", url,
+            "{seconds}", String.valueOf(countdown)
+        ));
         player.sendMessage("");
 
-        player.sendTitle("§e人机验证", "§f请在 §c" + countdown + " §f秒内完成验证", 0, 25, 5);
+        player.sendTitle(
+            msg.get("verify-title"),
+            msg.get("verify-subtitle", "{seconds}", String.valueOf(countdown)),
+            0, 25, 5
+        );
 
         sessionManager.startCountdown(player, countdown);
     }
 
     public void showLoginPrompt(Player player) {
-        player.sendTitle("§a验证通过", "§f请通过 /login 登陆 或 /reg 注册", 0, 60, 20);
+        Messages msg = plugin.getMessages();
+        player.sendTitle(
+            msg.get("verify-success-title"),
+            msg.get("verify-registered-prompt"),
+            0, 60, 20
+        );
         player.sendMessage("");
-        player.sendMessage(ChatColor.GREEN + "§e=== 人机验证通过 ===");
-        player.sendMessage(ChatColor.YELLOW + "已注册玩家请执行：/login <密码>");
-        player.sendMessage(ChatColor.YELLOW + "未注册玩家请执行：/reg <密码> <密码>");
+        player.sendMessage(msg.get("verify-success-registered"));
         player.sendMessage("");
     }
 

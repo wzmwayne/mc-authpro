@@ -3,12 +3,11 @@ package com.example.mcauthpro.command;
 import com.example.mcauthpro.McAuthPro;
 import com.example.mcauthpro.auth.AuthService;
 import com.example.mcauthpro.auth.SessionManager;
-import com.example.mcauthpro.listener.PlayerJoinListener;
-import org.bukkit.ChatColor;
+import com.example.mcauthpro.config.Messages;
+import org.bukkit.entity.Player;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 
 public class VerifyCommand implements CommandExecutor {
     private final McAuthPro plugin;
@@ -22,25 +21,26 @@ public class VerifyCommand implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.RED + "此命令只能由玩家执行。");
+            sender.sendMessage(plugin.getMessages().get("player-only"));
             return true;
         }
 
         Player player = (Player) sender;
         SessionManager sessionManager = plugin.getSessionManager();
+        Messages msg = plugin.getMessages();
 
         if (sessionManager.isTurnstileVerified(player)) {
-            player.sendMessage(ChatColor.GREEN + "你已完成人机验证。");
+            player.sendMessage(msg.get("verify-already-done"));
             return true;
         }
 
         if (!sessionManager.hasSession(player)) {
-            player.sendMessage(ChatColor.RED + "未找到验证会话，请重新加入服务器。");
+            player.sendMessage(msg.get("verify-no-session"));
             return true;
         }
 
         if (args.length != 1) {
-            player.sendMessage(ChatColor.RED + "用法：/verify <令牌>");
+            player.sendMessage(msg.get("verify-usage"));
             return true;
         }
 
@@ -49,14 +49,23 @@ public class VerifyCommand implements CommandExecutor {
             sessionManager.stopCountdown(player);
             sessionManager.markTurnstileVerified(player);
 
-            player.sendTitle("§a验证通过", "§f请通过 /login 登陆 或 /reg 注册", 0, 60, 20);
-            player.sendMessage("");
-            player.sendMessage(ChatColor.GREEN + "§e=== 人机验证通过 ===");
-            player.sendMessage(ChatColor.YELLOW + "已注册玩家请执行：/login <密码>");
-            player.sendMessage(ChatColor.YELLOW + "未注册玩家请执行：/reg <密码> <密码>");
-            player.sendMessage("");
+            if (authService.isRegistered(player)) {
+                player.sendTitle(
+                    msg.get("verify-success-title"),
+                    msg.get("verify-registered-prompt"),
+                    0, 60, 20
+                );
+                player.sendMessage(msg.get("verify-success-registered"));
+            } else {
+                player.sendTitle(
+                    msg.get("verify-success-title"),
+                    msg.get("verify-unregistered-prompt"),
+                    0, 60, 20
+                );
+                player.sendMessage(msg.get("verify-success-unregistered"));
+            }
         } else {
-            player.sendMessage(ChatColor.RED + "验证失败，令牌无效或已过期。");
+            player.sendMessage(msg.get("verify-failed"));
         }
 
         return true;
