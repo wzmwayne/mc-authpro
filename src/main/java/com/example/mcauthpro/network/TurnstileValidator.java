@@ -9,7 +9,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.concurrent.CompletableFuture;
 
 public class TurnstileValidator {
     private final PluginConfig config;
@@ -41,10 +40,6 @@ public class TurnstileValidator {
         } catch (Exception e) {
             return new ValidateResult(false, "network-error", "验证请求异常: " + e.getMessage());
         }
-    }
-
-    public CompletableFuture<ValidateResult> validateAsync(String token, String remoteIp) {
-        return CompletableFuture.supplyAsync(() -> validate(token, remoteIp));
     }
 
     private ValidateResult parseResponse(String responseBody) {

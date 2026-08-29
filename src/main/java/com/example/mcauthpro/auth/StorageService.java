@@ -4,7 +4,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class StorageService {
@@ -67,17 +66,5 @@ public class StorageService {
 
     private File getPlayerFile(String uuid) {
         return new File(dataFolder, uuid + ".yml");
-    }
-
-    public List<String> getAllRegisteredUUIDs() {
-        List<String> uuids = new ArrayList<>();
-        File[] files = dataFolder.listFiles((dir, name) -> name.endsWith(".yml"));
-        if (files != null) {
-            for (File file : files) {
-                String name = file.getName();
-                uuids.add(name.substring(0, name.length() - 4));
-            }
-        }
-        return uuids;
     }
 }

@@ -2,7 +2,7 @@ name: McAuthPro
 main: com.example.mcauthpro.McAuthPro
 version: ${version}
 api-version: 1.21
-description: Paper 1.21.x 安全插件，提供账号登录、人机验证、访问控制和黑白名单接管
+description: Paper 1.21.x 安全插件，提供账号登录、人机验证和访问控制
 authors: [Wayne]
 website: https://github.com/wayne/mc-authpro
 
@@ -52,17 +52,4 @@ permissions:
     default: true
   mcauthpro.admin:
     description: 管理员命令
-    default: op
-    children:
-      mcauthpro.whitelist: true
-      mcauthpro.blacklist: true
-      mcauthpro.ban-ip: true
-  mcauthpro.whitelist:
-    description: 白名单管理
-    default: op
-  mcauthpro.blacklist:
-    description: 黑名单管理
-    default: op
-  mcauthpro.ban-ip:
-    description: IP 封禁
     default: op

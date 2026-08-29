@@ -60,6 +60,7 @@ public class PluginConfig {
         return patched;
     }
 
+    // ==================== verification ====================
     public String getStaticSiteBaseUrl() {
         return config.getString("verification.static-site-base-url", "https://auth.example.com");
     }
@@ -88,18 +89,15 @@ public class PluginConfig {
         return config.getString("verification.expected-hostname", "");
     }
 
-    public int getMaxLoginAttempts() {
-        return config.getInt("security.max-login-attempts", 5);
+    public int getHttpTimeoutSeconds() {
+        return config.getInt("verification.http-timeout-seconds", 10);
     }
 
-    public int getLockoutSeconds() {
-        return config.getInt("security.lockout-seconds", 60);
+    public int getVerificationCountdown() {
+        return config.getInt("verification.countdown-seconds", 30);
     }
 
-    public boolean isAllowMultipleLoginsPerIp() {
-        return config.getBoolean("security.allow-multiple-logins-per-ip", true);
-    }
-
+    // ==================== session ====================
     public int getSessionTimeoutSeconds() {
         return config.getInt("session.timeout-seconds", 180);
     }
@@ -108,6 +106,7 @@ public class PluginConfig {
         return config.getInt("session.remember-ip-minutes", 30);
     }
 
+    // ==================== real-ip ====================
     public boolean isTrustProxy() {
         return config.getBoolean("real-ip.trust-proxy", true);
     }
@@ -128,58 +127,20 @@ public class PluginConfig {
         return config.getInt("real-ip.max-ips-to-record", 5);
     }
 
-    public int getHttpTimeoutSeconds() {
-        return config.getInt("verification.http-timeout-seconds", 10);
+    // ==================== security ====================
+    public int getMaxLoginAttempts() {
+        return config.getInt("security.max-login-attempts", 5);
     }
 
-    public boolean isWhitelistEnabled() {
-        return config.getBoolean("whitelist.enabled", false);
+    public int getLockoutSeconds() {
+        return config.getInt("security.lockout-seconds", 60);
     }
 
-    public String getWhitelistKickMessage() {
-        return config.getString("whitelist.kick-message", "你不在白名单中");
+    public boolean isAllowMultipleLoginsPerIp() {
+        return config.getBoolean("security.allow-multiple-logins-per-ip", true);
     }
 
-    public boolean isBlacklistEnabled() {
-        return config.getBoolean("blacklist.enabled", false);
-    }
-
-    public String getBlacklistKickMessage() {
-        return config.getString("blacklist.kick-message", "你已被加入黑名单");
-    }
-
-    public boolean isVerifyEnabled() {
-        return config.getBoolean("verification.enabled", true);
-    }
-
-    public String getChamberWorld() {
-        return config.getString("verification-chamber.world", "world");
-    }
-
-    public double getChamberX() {
-        return config.getDouble("verification-chamber.x", 0);
-    }
-
-    public double getChamberY() {
-        return config.getDouble("verification-chamber.y", 100);
-    }
-
-    public double getChamberZ() {
-        return config.getDouble("verification-chamber.z", 0);
-    }
-
-    public boolean isForceSpectator() {
-        return config.getBoolean("verification-chamber.force-spectator", true);
-    }
-
-    public int getMaxViewDistance() {
-        return config.getInt("verification-chamber.max-view-distance", 2);
-    }
-
-    public boolean isChamberEnabled() {
-        return config.getBoolean("verification-chamber.enabled", true);
-    }
-
+    // ==================== anti-dos ====================
     public int getMaxConcurrentUnauth() {
         return config.getInt("anti-dos.max-concurrent-unauth", 5);
     }
@@ -188,6 +149,7 @@ public class PluginConfig {
         return config.getInt("anti-dos.verification-timeout", 300);
     }
 
+    // ==================== login-world ====================
     public boolean isLoginWorldEnabled() {
         return config.getBoolean("login-world.enabled", true);
     }
@@ -208,7 +170,7 @@ public class PluginConfig {
         return config.getInt("login-world.wall-height", 1);
     }
 
-    public int getVerificationCountdown() {
-        return config.getInt("verification.countdown-seconds", 30);
+    public boolean isForceSpectator() {
+        return config.getBoolean("login-world.force-spectator", true);
     }
 }

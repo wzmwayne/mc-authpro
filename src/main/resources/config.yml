@@ -1,77 +1,91 @@
-# MC AuthPro 配置文件
+# ============================================================
+#  MC AuthPro 配置文件
+#  修改后需重启服务器生效
+#  缺失项会自动从 jar 内默认配置补全
+# ============================================================
 
+# -----------------------------
+# 人机验证（Cloudflare Turnstile）
+# -----------------------------
 verification:
-  # 是否启用验证（完全禁用验证模块）
+  # 是否启用验证模块，false 则跳过所有人机验证
   enabled: true
-  # 静态页面 URL（前端 Turnstile 页面地址）
+  # 静态页面地址（前端 Turnstile 页面，由 GitHub Pages 托管）
   static-site-base-url: "https://wzml.cc.cd/mc-authpro"
-  # Cloudflare Turnstile Siteverify API URL
+  # Cloudflare Siteverify API 地址（服务端验证令牌）
   siteverify-url: "https://challenges.cloudflare.com/turnstile/v0/siteverify"
-  # Cloudflare Turnstile 密钥
+  # Cloudflare Turnstile 密钥（站点密钥需与前端页面一致）
   secret-key: "1x0000000000000000000000000000000AA"
-  # Turnstile action 参数（用于统计和区分）
+  # Turnstile action 参数（用于统计和区分不同用途）
   action: "mc-login"
-  # 令牌有效期（秒）
+  # 令牌有效期（秒），超过此时间令牌失效
   token-ttl-seconds: 300
   # 整个登录流程超时（秒）
   timeout-seconds: 300
-  # 期望验证的 hostname（留空则不校验）
+  # 期望验证的 hostname（留空则不校验，用于防止跨站验证）
   expected-hostname: ""
-  # 请求超时（秒）
+  # HTTP 请求超时（秒）
   http-timeout-seconds: 10
-  # 人机验证倒计时（秒）
+  # 人机验证倒计时（秒），超时未验证则踢出
   countdown-seconds: 30
 
+# -----------------------------
+# 会话配置
+# -----------------------------
 session:
-  # 会话超时（秒）
+  # 会话超时（秒），超时后自动清理（未来实现）
   timeout-seconds: 180
-  # 记住 IP 的时间（分钟）
+  # 记住 IP 的时间（分钟），用于审计（未来实现）
   remember-ip-minutes: 30
 
+# -----------------------------
+# IP 解析
+# -----------------------------
 real-ip:
-  # 是否信任代理
+  # 是否信任代理头（BungeeCord / Velocity 等反向代理）
   trust-proxy: true
-  # CF 头
+  # Cloudflare 专用 IP 头
   cf-header: "CF-Connecting-IP"
-  # X-Forwarded-For 头
+  # 通用代理头（X-Forwarded-For）
   forwarded-header: "X-Forwarded-For"
-  # 是否启用 BungeeGuard
+  # 是否启用 BungeeGuard 验证
   bungee-guard: true
-  # 最多记录多少个 IP
+  # 最多记录多少个 IP（用于审计，防止滥用）
   max-ips-to-record: 5
 
+# -----------------------------
+# 安全配置
+# -----------------------------
 security:
-  # 最大登录尝试次数
+  # 最大登录尝试次数（未来实现登录尝试限制）
   max-login-attempts: 5
-  # 锁定时间（秒）
+  # 锁定时间（秒），超过最大尝试次数后锁定（未来实现）
   lockout-seconds: 60
   # 是否允许同 IP 多个账号同时登录
   allow-multiple-logins-per-ip: true
 
-whitelist:
-  enabled: false
-  kick-message: "你不在白名单中"
-
-blacklist:
-  enabled: false
-  kick-message: "你已被加入黑名单"
-
-verification-chamber:
-  enabled: true
-  world: "world"
-  x: 0
-  y: 100
-  z: 0
-  force-spectator: true
-  max-view-distance: 2
-
+# -----------------------------
+# 防 DoS 配置
+# -----------------------------
 anti-dos:
+  # 最大未验证并发玩家数（未来实现）
   max-concurrent-unauth: 5
+  # 验证超时（秒）（未来实现）
   verification-timeout: 300
 
+# -----------------------------
+# 登录世界配置
+# -----------------------------
 login-world:
+  # 是否启用专用登录世界
   enabled: true
+  # 世界名称
   name: "login"
+  # 屏障平台 Y 坐标
   platform-y: 100
+  # 屏障平台半径（平台大小为 platform-size*2+1）
   platform-size: 2
+  # 围墙高度（平台上方延伸的屏障墙）
   wall-height: 1
+  # 是否强制旁观者模式（登录世界内无法移动/交互）
+  force-spectator: true

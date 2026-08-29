@@ -22,7 +22,6 @@ verify-url-message: |
 verify-title: "&e人机验证"
 verify-subtitle: "&f请在 &c{seconds} &f秒内完成验证"
 verify-timeout: "&c人机验证超时，请重新加入"
-verify-no-session: "&c未找到验证会话，请重新加入服务器。"
 verify-usage: "&c用法：/verify <令牌>"
 verify-already-done: "&e你已完成人机验证。"
 verify-failed: "&c验证失败，令牌无效或已过期。"
