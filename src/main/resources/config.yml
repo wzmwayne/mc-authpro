@@ -18,6 +18,8 @@ verification:
   siteverify-url: "https://challenges.cloudflare.com/turnstile/v0/siteverify"
   # Cloudflare Turnstile 密钥（站点密钥需与前端页面一致）
   secret-key: "1x0000000000000000000000000000000AA"
+  # Turnstile 站点公钥（传递给前端页面使用）
+  sitekey: "1x00000000000000000000AA"
   # Turnstile action 参数（用于统计和区分不同用途）
   action: "mc-login"
   # 令牌有效期（秒），超过此时间令牌失效
@@ -30,8 +32,6 @@ verification:
   http-timeout-seconds: 10
   # 人机验证倒计时（秒），超时未验证则踢出
   countdown-seconds: 30
-  # 前端共享令牌（与网页传入的 token 参数对比，空则不校验）
-  frontend-token: ""
 
 # -----------------------------
 # 会话配置

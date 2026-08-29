@@ -34,13 +34,21 @@ public class VerifyCommand implements CommandExecutor {
             return true;
         }
 
-        if (args.length != 1) {
+        if (args.length != 2) {
             player.sendMessage(msg.get("verify-usage"));
             return true;
         }
 
-        String token = args[0];
-        if (authService.verifyTurnstileToken(player, token)) {
+        String key = args[0];
+        String token = args[1];
+
+        String playerName = sessionManager.getPlayerNameByKey(key);
+        if (playerName == null || !playerName.equalsIgnoreCase(player.getName())) {
+            player.sendMessage(msg.get("verify-invalid-key"));
+            return true;
+        }
+
+        if (authService.verifyTurnstileToken(player, key, token)) {
             sessionManager.stopCountdown(player);
 
             if (authService.isRegistered(player)) {

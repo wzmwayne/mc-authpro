@@ -4,6 +4,7 @@ import com.example.mcauthpro.McAuthPro;
 import com.example.mcauthpro.auth.AuthService;
 import com.example.mcauthpro.auth.SessionManager;
 import com.example.mcauthpro.config.Messages;
+import com.example.mcauthpro.config.PluginConfig;
 import com.example.mcauthpro.network.VerificationSite;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -46,6 +47,7 @@ public class PlayerJoinListener implements Listener {
     private void startVerificationFlow(Player player) {
         SessionManager sessionManager = plugin.getSessionManager();
         Messages msg = plugin.getMessages();
+        PluginConfig config = plugin.getPluginConfig();
 
         if (sessionManager.isTurnstileVerified(player)) {
             showLoginPrompt(player);
@@ -54,10 +56,13 @@ public class PlayerJoinListener implements Listener {
 
         sessionManager.stopCountdown(player);
 
-        VerificationSite verificationSite = new VerificationSite(authService.getConfig());
-        String url = verificationSite.getVerificationUrl(player.getName());
+        String verificationKey = sessionManager.createVerificationKey(player);
+        String sitekey = config.getSitekey();
 
-        int countdown = plugin.getPluginConfig().getVerificationCountdown();
+        VerificationSite verificationSite = new VerificationSite(config);
+        String url = verificationSite.getVerificationUrl(verificationKey, sitekey);
+
+        int countdown = config.getVerificationCountdown();
 
         player.sendMessage("");
         player.sendMessage(msg.get("verify-url-message",

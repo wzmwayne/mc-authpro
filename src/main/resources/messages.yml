@@ -17,13 +17,14 @@ verify-url-message: |
   &e=== 人机验证 ===
   &f请在浏览器中打开以下链接完成验证：
   &b{url}
-  &f复制令牌后执行：/verify <令牌>
+  &f验证完成后命令已自动复制，回到游戏聊天框粘贴发送即可
   &c请在 {seconds} 秒内完成，否则将被踢出！
 verify-title: "&e人机验证"
 verify-subtitle: "&f请在 &c{seconds} &f秒内完成验证"
 verify-timeout: "&c人机验证超时，请重新加入"
-verify-usage: "&c用法：/verify <令牌>"
+verify-usage: "&c用法：/verify <会话ID> <令牌>"
 verify-already-done: "&e你已完成人机验证。"
+verify-invalid-key: "&c无效的验证会话ID。"
 verify-failed: "&c验证失败，令牌无效或已过期。"
 
 # ========== 验证通过 ==========
@@ -42,7 +43,7 @@ verify-success-unregistered: |
 login-usage: "&c用法：/login <密码>"
 login-already-logged-in: "&e你已登录。"
 login-not-registered: "&c你未注册，请先执行：/reg <密码> <密码>"
-login-not-verified: "&c请先完成人机验证：/verify <令牌>"
+login-not-verified: "&c请先完成人机验证：/verify <会话ID> <令牌>"
 login-success-title: "&a密码正确，准备进入……"
 login-success-subtitle: "&f扫描账户中"
 login-success-enter-title: "&a进入服务器"
@@ -58,7 +59,7 @@ world-kick-other: "&a你已成功顶号上线。"
 register-usage: "&c用法：/reg <密码> <密码>"
 register-already-logged-in: "&e你已登录。"
 register-already-registered: "&c你已注册，请执行：/login <密码>"
-register-not-verified: "&c请先完成人机验证：/verify <令牌>"
+register-not-verified: "&c请先完成人机验证：/verify <会话ID> <令牌>"
 register-password-mismatch: "&c两次输入的密码不一致。"
 register-password-too-short: "&c密码长度至少为6位。"
 register-success: "&a注册成功！"

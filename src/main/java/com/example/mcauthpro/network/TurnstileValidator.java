@@ -38,7 +38,7 @@ public class TurnstileValidator {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             return parseResponse(response.body());
         } catch (Exception e) {
-            return new ValidateResult(false, "network-error", "验证请求异常: " + e.getMessage(), null);
+            return new ValidateResult(false, "network-error", "验证请求异常: " + e.getMessage());
         }
     }
 
@@ -47,25 +47,22 @@ public class TurnstileValidator {
             JSONParser parser = new JSONParser();
             JSONObject jsonResponse = (JSONObject) parser.parse(responseBody);
             boolean success = (boolean) jsonResponse.get("success");
-            String challengeTs = (String) jsonResponse.get("challenge_ts");
             String hostname = (String) jsonResponse.get("hostname");
-            String action = (String) jsonResponse.get("action");
-            String cdata = (String) jsonResponse.get("cdata");
             if (success) {
                 String expectedHostname = config.getExpectedHostname();
                 if (expectedHostname != null && !expectedHostname.isEmpty() && !expectedHostname.equals(hostname)) {
-                    return new ValidateResult(false, "hostname-mismatch", "hostname 不匹配: " + hostname, cdata);
+                    return new ValidateResult(false, "hostname-mismatch", "hostname 不匹配: " + hostname);
                 }
-                return new ValidateResult(true, null, "验证成功", cdata);
+                return new ValidateResult(true, null, "验证成功");
             } else {
                 Object errorCodes = jsonResponse.get("error-codes");
                 String errorCode = errorCodes instanceof java.util.List<?> list
                     ? String.join(",", list.stream().map(String::valueOf).toList())
                     : "unknown";
-                return new ValidateResult(false, errorCode, "Cloudflare 验证失败", cdata);
+                return new ValidateResult(false, errorCode, "Cloudflare 验证失败");
             }
         } catch (Exception e) {
-            return new ValidateResult(false, "parse-error", "响应解析失败: " + e.getMessage(), null);
+            return new ValidateResult(false, "parse-error", "响应解析失败: " + e.getMessage());
         }
     }
 
@@ -73,18 +70,15 @@ public class TurnstileValidator {
         private final boolean success;
         private final String errorCode;
         private final String message;
-        private final String cdata;
 
-        public ValidateResult(boolean success, String errorCode, String message, String cdata) {
+        public ValidateResult(boolean success, String errorCode, String message) {
             this.success = success;
             this.errorCode = errorCode;
             this.message = message;
-            this.cdata = cdata;
         }
 
         public boolean isSuccess() { return success; }
         public String getErrorCode() { return errorCode; }
         public String getMessage() { return message; }
-        public String getCdata() { return cdata; }
     }
 }

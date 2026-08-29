@@ -73,6 +73,10 @@ public class PluginConfig {
         return config.getString("verification.secret-key", "");
     }
 
+    public String getSitekey() {
+        return config.getString("verification.sitekey", "1x00000000000000000000AA");
+    }
+
     public String getAction() {
         return config.getString("verification.action", "mc-login");
     }
@@ -103,10 +107,6 @@ public class PluginConfig {
 
     public int getVerificationCountdown() {
         return config.getInt("verification.countdown-seconds", 30);
-    }
-
-    public String getFrontendToken() {
-        return config.getString("verification.frontend-token", "");
     }
 
     // ==================== session ====================

@@ -59,22 +59,19 @@
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const sessionId = urlParams.get('session');
-    const frontendToken = urlParams.get('token') || '';
     const sitekey = urlParams.get('sitekey') || '1x00000000000000000000AA';
 
     if (!sessionId) {
       document.body.innerHTML = '<div class="card"><h1 style="color: #f44336;">错误</h1><p>缺少 session 参数，请从游戏内重新获取链接。</p></div>';
     } else {
       function renderTurnstile() {
-        const cdata = frontendToken ? (sessionId + '|' + frontendToken) : sessionId;
         turnstile.render('#turnstile-container', {
           sitekey: sitekey,
           action: 'mc-login',
-          cdata: cdata,
           theme: 'auto',
           size: 'flexible',
           callback: function(token) {
-            var cmd = '/verify ' + token;
+            var cmd = '/verify ' + sessionId + ' ' + token;
             document.getElementById('cmd-display').textContent = cmd;
             document.getElementById('success-panel').style.display = 'block';
             autoCopy(cmd);

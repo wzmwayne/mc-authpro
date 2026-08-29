@@ -15,6 +15,7 @@ commands:
     description: 注册
     usage: /register <密码> <密码>
     permission: mcauthpro.register
+    aliases: [reg]
   verify:
     description: 验证令牌
     usage: /verify <令牌>

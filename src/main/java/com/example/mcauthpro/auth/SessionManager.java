@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 public class SessionManager {
@@ -17,10 +18,34 @@ public class SessionManager {
     private final Set<String> loginVerified = ConcurrentHashMap.newKeySet();
     private final Map<String, Integer> countdowns = new ConcurrentHashMap<>();
     private final Map<String, ScheduledFuture<?>> countdownTasks = new ConcurrentHashMap<>();
+    private final Map<String, String> pendingKeys = new ConcurrentHashMap<>();
     private final ScheduledExecutorService cleanupExecutor = Executors.newSingleThreadScheduledExecutor();
 
     public SessionManager(McAuthPro plugin) {
         this.plugin = plugin;
+    }
+
+    public String createVerificationKey(Player player) {
+        String key;
+        do {
+            long value = ThreadLocalRandom.current().nextLong(0x100000000L);
+            key = String.format("%08x", value);
+        } while (pendingKeys.containsKey(key));
+        pendingKeys.put(key, player.getName());
+        return key;
+    }
+
+    public String getPlayerNameByKey(String key) {
+        return pendingKeys.get(key);
+    }
+
+    public void removeKey(String key) {
+        pendingKeys.remove(key);
+    }
+
+    public void removeKeysForPlayer(Player player) {
+        String name = player.getName();
+        pendingKeys.entrySet().removeIf(entry -> entry.getValue().equals(name));
     }
 
     public boolean isTurnstileVerified(Player player) {
@@ -62,6 +87,7 @@ public class SessionManager {
                 if (remaining <= 0) {
                     stopCountdown(player);
                     countdowns.remove(name);
+                    removeKeysForPlayer(plugin.getServer().getPlayerExact(name));
                     if (player.isOnline()) {
                         player.kickPlayer("§c人机验证超时，请重新加入");
                     }
@@ -92,6 +118,7 @@ public class SessionManager {
         turnstileVerified.remove(name);
         loginVerified.remove(name);
         countdowns.remove(name);
+        removeKeysForPlayer(player);
     }
 
     public int getTurnstileVerifiedCount() {
@@ -109,5 +136,6 @@ public class SessionManager {
         turnstileVerified.clear();
         loginVerified.clear();
         countdowns.clear();
+        pendingKeys.clear();
     }
 }

@@ -9,12 +9,7 @@ public class VerificationSite {
         this.config = config;
     }
 
-    public String getVerificationUrl(String sessionId) {
-        String url = config.getStaticSiteBaseUrl() + "?session=" + sessionId;
-        String token = config.getFrontendToken();
-        if (token != null && !token.isEmpty()) {
-            url += "&token=" + token;
-        }
-        return url;
+    public String getVerificationUrl(String key, String sitekey) {
+        return config.getStaticSiteBaseUrl() + "?session=" + key + "&sitekey=" + sitekey;
     }
 }

@@ -60,18 +60,12 @@ public class AuthService {
         return playerData.verifyPassword(password);
     }
 
-    public boolean verifyTurnstileToken(Player player, String token) {
+    public boolean verifyTurnstileToken(Player player, String key, String token) {
         String remoteIp = realIpResolver.getRealIp(player);
         TurnstileValidator.ValidateResult result = turnstileValidator.validate(token, remoteIp);
         if (result.isSuccess()) {
-            String cdata = result.getCdata();
-            String expectedToken = config.getFrontendToken();
-            if (expectedToken != null && !expectedToken.isEmpty()) {
-                if (cdata == null || !cdata.contains("|" + expectedToken)) {
-                    return false;
-                }
-            }
             sessionManager.markTurnstileVerified(player);
+            sessionManager.removeKey(key);
             return true;
         }
         return false;
